@@ -1,26 +1,25 @@
 import { Client, Events, GatewayIntentBits, REST, Routes} from "discord.js"
-import 'dotenv/config'
-
 import { Commands } from "./Commands";
+import { Listeners} from "./Listeners";
+
+import 'dotenv/config'
 
 const token = process.env.TOKEN ?? "";
 const clientId = process.env.CLIENTID ?? "";
 
-console.log("Bot is starting...");
-
 const client = new Client({ intents: [GatewayIntentBits.Guilds] });
-
-client.once(Events.ClientReady, c => {
-  console.log(`Nice! Logged in as ${c.user.tag}`);
-})
 
 const rest = new REST().setToken(token);
 
 (async () => {
   await rest.put(
     Routes.applicationCommands(clientId),
-    { body: Commands },
+    { body: Commands.map(cmd => cmd.data.toJSON()) },
   )
 })()
+
+for (const listener of Listeners) {
+  listener(client)
+}
 
 client.login(token);

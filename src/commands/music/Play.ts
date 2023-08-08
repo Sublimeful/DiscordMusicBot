@@ -1,9 +1,10 @@
 import { CommandInteraction, SlashCommandBuilder } from "discord.js";
-import Command from "src/structures/Command";
 
-export const Play: Command = {
-  data: new SlashCommandBuilder(),
+export default {
+  data: new SlashCommandBuilder()
+  .setName("play")
+  .setDescription("Hello"),
   async execute(interaction: CommandInteraction) {
-    
+    await interaction.reply('Pong!');
   }
 };
