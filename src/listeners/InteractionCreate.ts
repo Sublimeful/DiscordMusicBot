@@ -1,5 +1,6 @@
 import { Client } from "discord.js";
 import { CommandsMap } from "../Commands";
+import CommandContext from "../structures/CommandContext";
 
 export default (client: Client): void => {
   client.on("interactionCreate", async interaction => {
@@ -13,7 +14,8 @@ export default (client: Client): void => {
     }
 
     try {
-      await command.execute(interaction);
+      const context = new CommandContext(interaction);
+      await command.execute(context);
     } catch (error) {
       console.error(`Error executing ${interaction.commandName}`);
       console.error(error);
