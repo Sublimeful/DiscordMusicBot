@@ -1,5 +1,4 @@
-
-import { ChatInputCommandInteraction } from "discord.js";
+import { SlashCommandBuilder, ChatInputCommandInteraction, SlashCommandStringOption } from "discord.js";
 
 declare module "discord.js" {
   export interface Guild {

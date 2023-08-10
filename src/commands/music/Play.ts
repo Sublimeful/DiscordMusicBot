@@ -1,6 +1,7 @@
 import { SlashCommandBuilder, ChatInputCommandInteraction, SlashCommandStringOption } from "discord.js";
-import CommandContext from "src/structures/CommandContext";
-import { handleVideos } from "src/utils/functions/Music";
+import CommandContext from "../../structures/CommandContext.ts";
+import Song from "../../structures/Song.ts";
+import { handleVideos } from "../../utils/functions/Music.ts";
 
 export default {
   data: new SlashCommandBuilder()
@@ -16,8 +17,10 @@ export default {
 
     if (!voiceChannel) return;  // TODO: Give error if user sent command while not in VC
 
-    const query = interaction.options.getString("query")
+    const query = (interaction.options.getString("query"))!
 
-    handleVideos(context);
+    const songs: Song[] = [{videoURL: query}]
+
+    handleVideos(context, songs);
   }
 };

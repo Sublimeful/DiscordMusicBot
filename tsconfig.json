@@ -1,33 +1,24 @@
 {
   "compilerOptions": {
     "target": "ESNext",
-    "module": "commonjs",
+    "module": "ESNext",
+    "moduleResolution": "NodeNext",
+    "allowImportingTsExtensions": true,
+    "strict": true,
     "rootDir": "./src/",
     "outDir": "./dist/",
-    "strict": true,
-    "moduleResolution": "node",
-    "importHelpers": true,
-    "experimentalDecorators": true,
     "esModuleInterop": true,
-    "skipLibCheck": true,
     "allowSyntheticDefaultImports": true,
-    "resolveJsonModule": true,
-    "forceConsistentCasingInFileNames": true,
-    "removeComments": true,
-    "typeRoots": [
-      "node_modules/@types"
-    ],
-    "sourceMap": false,
-    "baseUrl": "./"
+    "experimentalDecorators": true,
+    "emitDecoratorMetadata": true,
+    "skipLibCheck": true,
+    "noEmitHelpers": true,
+    "importHelpers": true,
+    "resolveJsonModule": true
   },
-  "files": [
-    "src/Bot.ts"
-  ],
+  "exclude": [],
   "include": [
-    "./**/*.ts"
+    "src/**/*"
   ],
-  "exclude": [
-    "node_modules",
-    "dist"
-  ],
+  "files": ["src/typings/index.d.ts"]
 }

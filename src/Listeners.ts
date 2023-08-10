@@ -1,4 +1,4 @@
-import Ready from "./listeners/Ready";
-import InteractionCreate from "./listeners/InteractionCreate";
+import Ready from "./listeners/Ready.ts";
+import InteractionCreate from "./listeners/InteractionCreate.ts";
 
 export const Listeners = [Ready, InteractionCreate];

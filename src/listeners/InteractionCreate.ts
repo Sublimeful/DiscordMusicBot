@@ -1,6 +1,6 @@
 import { Client } from "discord.js";
-import { CommandsMap } from "../Commands";
-import CommandContext from "../structures/CommandContext";
+import { CommandsMap } from "../Commands.ts";
+import CommandContext from "../structures/CommandContext.ts";
 
 export default (client: Client): void => {
   client.on("interactionCreate", async interaction => {

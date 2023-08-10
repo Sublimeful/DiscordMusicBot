@@ -1,6 +1,6 @@
 import { Client, Events, GatewayIntentBits, REST, Routes} from "discord.js"
-import { Commands } from "./Commands";
-import { Listeners} from "./Listeners";
+import { Commands } from "./Commands.ts";
+import { Listeners} from "./Listeners.ts";
 
 import 'dotenv/config'
 

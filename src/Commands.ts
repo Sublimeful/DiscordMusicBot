@@ -1,4 +1,4 @@
-import Play from "./commands/music/Play";
+import Play from "./commands/music/Play.ts";
 
 export const Commands = [Play]
 export const CommandsMap = new Map<string, any>();
