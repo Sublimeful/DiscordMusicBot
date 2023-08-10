@@ -23,6 +23,10 @@ export default class ServerQueue {
   public get length() {
     return this.Songs.length;
   }
+
+  public clear() {
+    this.Songs = []
+  }
 }
 
 

@@ -7,7 +7,7 @@ import 'dotenv/config'
 const token = process.env.TOKEN ?? "";
 const clientId = process.env.CLIENTID ?? "";
 
-const client = new Client({ intents: [GatewayIntentBits.Guilds] });
+const client = new Client({ intents: [GatewayIntentBits.Guilds, GatewayIntentBits.GuildVoiceStates] });
 
 const rest = new REST().setToken(token);
 

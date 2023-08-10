@@ -22,5 +22,7 @@ export default {
     const songs: Song[] = [{videoURL: query}]
 
     handleVideos(context, songs);
+
+    interaction.reply("HAHAHA");
   }
 };
