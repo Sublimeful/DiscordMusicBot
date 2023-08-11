@@ -1,12 +1,16 @@
 import Song from "./Song.ts";
 
 export default class ServerQueue {
-  public Songs: Song[];
+  public songs: Song[];
   public currentIndex: number;
 
-  public constructor(songs: Song[]) {
-    this.Songs = songs;
+  public constructor() {
+    this.songs = [];
     this.currentIndex = -1;
+  }
+
+  public enqueue(songs: Song[]) {
+    this.songs.concat(songs);
   }
 
   public nextSong() {
@@ -17,15 +21,15 @@ export default class ServerQueue {
 
     this.currentIndex = (this.currentIndex + 1) % this.length;
 
-    return this.Songs[this.currentIndex];
+    return this.songs[this.currentIndex];
   }
 
   public get length() {
-    return this.Songs.length;
+    return this.songs.length;
   }
 
   public clear() {
-    this.Songs = []
+    this.songs = []
   }
 }
 

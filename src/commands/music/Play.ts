@@ -21,8 +21,10 @@ export default {
 
     const songs: Song[] = [{videoURL: query}]
 
+    if (songs.length === 0) return; // TODO: Raise error
+
     handleVideos(context, songs);
 
-    interaction.reply("HAHAHA");
+    interaction.reply("HAHA");
   }
 };
