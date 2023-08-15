@@ -3,6 +3,7 @@ import CommandContext from "../../structures/CommandContext.ts";
 import Song from "../../structures/Song.ts";
 
 import ServerMusic from "../../structures/ServerMusic.ts";
+import { Debugger } from "./Debug.ts";
 
 import { video_info, stream_from_info } from "play-dl"
 import { PlayableVideo, YTPlayableVideo } from "../../structures/PlayableVideo.ts";
@@ -37,9 +38,10 @@ export function handleVideos(context: CommandContext, songs: Song[]) {
   music.enqueue(songs);
 
   if (music.currentState !== "idle") return;  // Only play song when nothing is playing
-    
+
   const currentSong = music.nextSong()!
-  console.log(currentSong)
+
+  Debugger.log(currentSong)
 
   try {
     // try joining the Voice Channel the user who ran the command is in

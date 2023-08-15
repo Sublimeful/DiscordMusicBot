@@ -10,7 +10,7 @@ export default class ServerQueue {
   }
 
   public enqueue(songs: Song[]) {
-    this.songs.concat(songs);
+    this.songs = this.songs.concat(songs);
   }
 
   public nextSong() {

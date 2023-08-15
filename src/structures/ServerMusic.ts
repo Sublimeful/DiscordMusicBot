@@ -32,7 +32,8 @@ export default class ServerMusic {
       this.currentState = newState.status;
       this.previousState = oldState.status;
       if (newState.status === "playing" && oldState.status !== "paused") {
-        
+        // New song started playing
+        // TODO: Add notification about new song playing
       } else if (newState.status === "idle") {
         const newSong = this.nextSong();
         if (newSong) play(this, newSong);
