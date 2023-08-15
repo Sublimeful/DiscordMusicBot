@@ -1,7 +1,8 @@
 import { AudioPlayer, AudioPlayerStatus, NoSubscriberBehavior, VoiceConnection, createAudioPlayer } from "@discordjs/voice";
 import ServerQueue from "./ServerQueue.ts";
-import Song from "./Song.ts";
-import { play } from "../utils/functions/Music.ts";
+import { Debugger } from "../utils/functions/Debug.ts";
+import { Song } from "./Song.ts";
+import play from "../utils/functions/music/play.ts";
 
 
 export default class ServerMusic {
@@ -14,6 +15,10 @@ export default class ServerMusic {
   public connection: VoiceConnection | null = null;
   public currentState: AudioPlayerStatus;
   public previousState: AudioPlayerStatus;
+
+  public get currentSong() {
+    return this.queue.currentSong;
+  }
 
   public enqueue(songs: Song[]) {
     this.queue.enqueue(songs);
@@ -33,7 +38,6 @@ export default class ServerMusic {
       this.previousState = oldState.status;
       if (newState.status === "playing" && oldState.status !== "paused") {
         // New song started playing
-        // TODO: Add notification about new song playing
       } else if (newState.status === "idle") {
         const newSong = this.nextSong();
         if (newSong) play(this, newSong);

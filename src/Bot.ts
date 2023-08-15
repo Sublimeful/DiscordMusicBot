@@ -1,8 +1,9 @@
 import { Client, Events, GatewayIntentBits, REST, Routes} from "discord.js"
 import { Commands } from "./Commands.ts";
-import { Listeners} from "./Listeners.ts";
 
 import 'dotenv/config'
+import InteractionCreate from "./events/InteractionCreate.ts";
+import Ready from "./events/Ready.ts";
 
 const token = process.env.TOKEN ?? "";
 const clientId = process.env.CLIENTID ?? "";
@@ -18,8 +19,8 @@ const rest = new REST().setToken(token);
   )
 })()
 
-for (const listener of Listeners) {
-  listener(client)
-}
+// Bind events to listeners
+InteractionCreate(client)
+Ready(client)
 
 client.login(token);

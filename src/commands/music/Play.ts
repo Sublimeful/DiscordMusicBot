@@ -1,7 +1,6 @@
 import { SlashCommandBuilder, ChatInputCommandInteraction, SlashCommandStringOption } from "discord.js";
 import CommandContext from "../../structures/CommandContext.ts";
-import Song from "../../structures/Song.ts";
-import { handleVideos } from "../../utils/functions/Music.ts";
+import handleQuery from "../../utils/functions/music/handleQuery.ts";
 
 export default {
   data: new SlashCommandBuilder()
@@ -19,11 +18,7 @@ export default {
 
     const query = (interaction.options.getString("query"))!
 
-    const songs: Song[] = [{videoURL: query}]
-
-    if (songs.length === 0) return; // TODO: Raise error
-
-    handleVideos(context, songs);
+    handleQuery(context, query);
 
     interaction.reply("HAHA");
   }

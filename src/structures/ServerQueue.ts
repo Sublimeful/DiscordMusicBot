@@ -1,8 +1,16 @@
-import Song from "./Song.ts";
+import { Song } from "./Song";
 
 export default class ServerQueue {
   public songs: Song[];
   public currentIndex: number;
+
+  public get currentSong() {
+    if (this.currentIndex >= 0 &&
+        this.currentIndex < this.songs.length) {
+      return this.songs[this.currentIndex];
+    }
+    return null;
+  }
 
   public constructor() {
     this.songs = [];
