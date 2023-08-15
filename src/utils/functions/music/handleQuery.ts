@@ -23,6 +23,7 @@ export default async function handleQuery(context: CommandContext, query: string
   const songs = await getSongsFromQuery(query);
 
   if (songs.length > 0) {
+    // TODO: Notification showing enqueued songs
     music.enqueue(songs);
   } else {
     // TODO: Notification saying no songs found
