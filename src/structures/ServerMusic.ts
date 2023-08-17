@@ -1,6 +1,5 @@
 import { AudioPlayer, AudioPlayerStatus, NoSubscriberBehavior, VoiceConnection, createAudioPlayer } from "@discordjs/voice";
 import ServerQueue from "./ServerQueue.ts";
-import { Debugger } from "../utils/functions/Debug.ts";
 import { Song } from "./Song.ts";
 import play from "../utils/functions/music/play.ts";
 

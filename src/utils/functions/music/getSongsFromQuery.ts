@@ -1,6 +1,6 @@
 import { Song, YTSong } from "../../../structures/Song";
 import { InfoData, playlist_info, search, validate, video_basic_info, video_info } from "play-dl";
-import { Debugger } from "../Debug";
+import Debug from "../../../structures/Debug";
 
 export async function getSongsFromQuery(query: string): Promise<Song[]> {
   const queryType = await validate(query);
@@ -18,7 +18,6 @@ export async function getSongsFromQuery(query: string): Promise<Song[]> {
       for (const video of allVideos) {
         const song = new YTSong(video);
         songs.push(song);
-        Debugger.log(song.title);
       }
     }
     default: {

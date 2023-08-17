@@ -9,8 +9,7 @@ export default (client: Client): void => {
     const command = CommandsMap.get(interaction.commandName);
 
     if (!command) {
-      console.error(`No command matching ${interaction.commandName} was found.`);
-      return;
+      return console.error(`No command matching ${interaction.commandName} was found.`);
     }
 
     try {
