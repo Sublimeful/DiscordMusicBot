@@ -11,6 +11,7 @@ export async function getSongsFromQuery(query: string): Promise<Song[]> {
       const info = await video_basic_info(query);
       const song = new YTSong(info.video_details);
       songs.push(song);
+      break;
     }
     case "yt_playlist": {
       const playlist = await playlist_info(query);
@@ -19,6 +20,7 @@ export async function getSongsFromQuery(query: string): Promise<Song[]> {
         const song = new YTSong(video);
         songs.push(song);
       }
+      break;
     }
     default: {
       // Youtube search query
@@ -26,6 +28,7 @@ export async function getSongsFromQuery(query: string): Promise<Song[]> {
       const info = await video_basic_info(searchResults[0].url);
       const song = new YTSong(info.video_details);
       songs.push(song)
+      break;
     }
   }
 

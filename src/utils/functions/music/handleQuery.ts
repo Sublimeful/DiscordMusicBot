@@ -1,4 +1,3 @@
-import { joinVoiceChannel } from "@discordjs/voice";
 import PlayerStateChange from "../../../events/PlayerStateChange";
 import CommandContext from "../../../structures/CommandContext";
 import ServerMusic from "../../../structures/ServerMusic";
@@ -6,6 +5,7 @@ import Debug from "../../../structures/Debug";
 import { getSongsFromQuery } from "./getSongsFromQuery";
 import play from "./play";
 import { MessageType, createEmbed } from "../../Message";
+import { joinVC } from "../../VoiceChannel";
 
 export default async function handleQuery(context: CommandContext, query: string) {
   if (!context.voiceChannel || !context.guild || !context.interaction.channel) {
@@ -19,7 +19,6 @@ export default async function handleQuery(context: CommandContext, query: string
     PlayerStateChange(context.guild.music, context.interaction.channel);
   }
 
-  const voiceChannel = context.voiceChannel
   const music = context.guild.music
 
   // Search query and get songs
@@ -46,17 +45,8 @@ export default async function handleQuery(context: CommandContext, query: string
 
   try {
     // try joining the Voice Channel the user who ran the command is in
-    const connection = joinVoiceChannel({
-      adapterCreator: context.guild.voiceAdapterCreator,
-      channelId: voiceChannel.id,
-      guildId: context.guild.id,
-      selfDeaf: true
-    });
-
-    context.guild.music.connection = connection;
-
-    play(context.guild.music, currentSong);
-
+    context.guild.music.connection = joinVC(context.guild, context.voiceChannel);
+    play(context.guild.music, currentSong);  // Play the song in the voice channel
   } catch(error) {
     delete context.guild.music;
   }
