@@ -2,6 +2,7 @@ import { SlashCommandBuilder, ChatInputCommandInteraction, SlashCommandStringOpt
 import CommandContext from "../../structures/CommandContext.ts";
 import { inVC, sameVC } from "../../utils/VoiceChannel.ts";
 import { MessageType, createEmbed } from "../../utils/Message.ts";
+import Debug from "../../structures/Debug.ts";
 
 export default {
   data: new SlashCommandBuilder()
@@ -9,7 +10,9 @@ export default {
   .setDescription("Skips the current song!"),
   async execute(context: CommandContext) {
     if (!inVC(context) || !sameVC(context)) return;
-    if (!context.guild || !context.guild.music) return;
+    if (!context.guild || !context.guild.music) {
+      return Debug.error("'skip' command somehow executed when not in a guild or guild music structure not created!");
+    }
 
     const skippedSong = context.guild.music.skipSong();
 
