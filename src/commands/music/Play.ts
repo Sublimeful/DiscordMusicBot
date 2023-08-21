@@ -12,10 +12,9 @@ export default {
                   .setDescription("A search query")
                   .setRequired(true)),
   async execute(context: CommandContext) {
-    const interaction = context.interaction;
-
     if (!inVC(context) || !sameVC(context)) return;
 
+    const interaction = context.interaction;
     const query = (interaction.options.getString("query"))!
 
     handleQuery(context, query);

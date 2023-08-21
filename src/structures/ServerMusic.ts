@@ -15,7 +15,7 @@ export default class ServerMusic {
   public currentState: AudioPlayerStatus;
   public previousState: AudioPlayerStatus;
 
-  public get currentSong() {
+  public get currentSong(): Song | null {
     return this.queue.currentSong;
   }
 
@@ -23,8 +23,23 @@ export default class ServerMusic {
     this.queue.enqueue(songs);
   }
 
-  public nextSong() {
+  /**
+   * Gets the next song from the queue, this advances the queue's currentSong pointer
+   * @returns next song in queue, null if there is none
+   */
+  public nextSong(): Song | null {
     return this.queue.nextSong();
+  }
+
+  /**
+   * Skips current song and plays the next song
+   * @returns skipped song, null if nothing was skipped
+   */
+  public skipSong() {
+    const skippedSong = this.currentSong;
+    const newSong = this.nextSong();
+    if (newSong) play(this, newSong);
+    return skippedSong;
   }
 
   public constructor() {
@@ -38,8 +53,7 @@ export default class ServerMusic {
       if (newState.status === "playing" && oldState.status !== "paused") {
         // New song started playing
       } else if (newState.status === "idle") {
-        const newSong = this.nextSong();
-        if (newSong) play(this, newSong);
+        this.skipSong();
       }
     })
     this.player.on("error", error => {

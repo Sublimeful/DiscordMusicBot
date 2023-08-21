@@ -4,7 +4,7 @@ export default class ServerQueue {
   public songs: Song[];
   public currentIndex: number;
 
-  public get currentSong() {
+  public get currentSong(): Song | null {
     if (this.currentIndex >= 0 &&
         this.currentIndex < this.songs.length) {
       return this.songs[this.currentIndex];
@@ -21,10 +21,10 @@ export default class ServerQueue {
     this.songs = this.songs.concat(songs);
   }
 
-  public nextSong() {
+  public nextSong(): Song | null {
     if (this.length === 0) {
       this.currentIndex = -1;
-      return null
+      return null;
     }
 
     this.currentIndex = (this.currentIndex + 1) % this.length;
