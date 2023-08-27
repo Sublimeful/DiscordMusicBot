@@ -31,6 +31,6 @@ export default async function handleQuery(context: CommandContext, query: string
     music.connection = joinVC(guild, voiceChannel);
     music.jumpSong(music.songs.length - songs.length);  // Jump to the first song of the added songs
   } catch(error) {
-    delete guild.music;
+    music.destroy();
   }
 }
