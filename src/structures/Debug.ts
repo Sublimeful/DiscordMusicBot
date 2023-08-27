@@ -7,7 +7,7 @@ export default class Debug {
       console.log(`[${tag}]`);
   }
   public static error(message: any = "", tag = "Debug Error") {
-    console.error(message);
+    console.error(`[${tag}] : ${message}`);
     console.trace();
   }
 }

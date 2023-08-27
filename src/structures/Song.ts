@@ -1,4 +1,4 @@
-import { InfoData, SoundCloudStream, YouTubeStream, YouTubeVideo, stream, stream_from_info } from "play-dl";
+import { SoundCloudStream, YouTubeStream, YouTubeVideo, stream } from "play-dl";
 
 export abstract class Song {
   public constructor(protected info: YouTubeVideo) {}

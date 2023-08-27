@@ -1,7 +1,6 @@
 import { joinVoiceChannel, VoiceConnection } from "@discordjs/voice";
 import CommandContext from "../structures/CommandContext";
 import { createEmbed, MessageType } from "./Message";
-import Debug from "../structures/Debug";
 import { Guild, VoiceBasedChannel } from "discord.js";
 
 

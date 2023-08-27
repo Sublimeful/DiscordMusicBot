@@ -3,7 +3,6 @@ import CommandContext from "../../../structures/CommandContext";
 import ServerMusic from "../../../structures/ServerMusic";
 import Debug from "../../../structures/Debug";
 import { getSongsFromQuery } from "./getSongsFromQuery";
-import play from "./play";
 import { MessageType, createEmbed } from "../../Message";
 import { joinVC } from "../../VoiceChannel";
 
@@ -45,8 +44,8 @@ export default async function handleQuery(context: CommandContext, query: string
 
   try {
     // try joining the Voice Channel the user who ran the command is in
-    context.guild.music.connection = joinVC(context.guild, context.voiceChannel);
-    play(context.guild.music, currentSong);  // Play the song in the voice channel
+    music.connection = joinVC(context.guild, context.voiceChannel);
+    music.play(currentSong);  // Play the song in the voice channel
   } catch(error) {
     delete context.guild.music;
   }

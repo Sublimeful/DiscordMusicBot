@@ -1,4 +1,4 @@
-import { SlashCommandBuilder, ChatInputCommandInteraction, SlashCommandStringOption } from "discord.js";
+import { SlashCommandBuilder } from "discord.js";
 import CommandContext from "../../structures/CommandContext.ts";
 import { inVC, sameVC } from "../../utils/VoiceChannel.ts";
 import { MessageType, createEmbed } from "../../utils/Message.ts";

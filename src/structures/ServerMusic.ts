@@ -1,7 +1,7 @@
-import { AudioPlayer, AudioPlayerStatus, NoSubscriberBehavior, VoiceConnection, createAudioPlayer } from "@discordjs/voice";
+import { AudioPlayer, AudioPlayerStatus, NoSubscriberBehavior, VoiceConnection, createAudioPlayer, createAudioResource } from "@discordjs/voice";
 import ServerQueue from "./ServerQueue.ts";
 import { Song } from "./Song.ts";
-import play from "../utils/functions/music/play.ts";
+import Debug from "./Debug.ts";
 
 
 export default class ServerMusic {
@@ -46,8 +46,28 @@ export default class ServerMusic {
   public skipSong() {
     const skippedSong = this.currentSong;
     const newSong = this.nextSong();
-    if (newSong) play(this, newSong);
+    if (newSong) this.play(newSong);
     return skippedSong;
+  }
+  
+  /**
+   * Stops all playback
+   * @returns null
+   */
+  public stop() {
+    this.player.stop();
+  }
+
+  public async play(song: Song) {
+    if (!this.connection) {
+      return Debug.error("'play' function called when the bot is not connected to a voice channel!");
+    }
+
+    const stream = await song.getStream();
+    const resource = createAudioResource(stream.stream, {inputType: stream.type });
+
+    this.player.play(resource);
+    this.connection.subscribe(this.player);
   }
 
   /**
@@ -59,7 +79,7 @@ export default class ServerMusic {
   public jumpSong(n: number) {
     const skippedSong = this.currentSong;
     const newSong = this.queue.jumpSong(n);
-    if (newSong) play(this, newSong);
+    if (newSong) this.play(newSong);
     return skippedSong;
   }
 

@@ -1,6 +1,5 @@
 import { Song, YTSong } from "../../../structures/Song";
-import { InfoData, playlist_info, search, validate, video_basic_info, video_info } from "play-dl";
-import Debug from "../../../structures/Debug";
+import { playlist_info, search, validate, video_basic_info } from "play-dl";
 
 export async function getSongsFromQuery(query: string): Promise<Song[]> {
   const queryType = await validate(query);

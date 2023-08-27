@@ -22,20 +22,20 @@ export default class ServerQueue {
   }
 
   public nextSong(): Song | null {
-    if (this.length === 0) {
+    if (this.currentIndex + 1 >= this.length) {
       this.currentIndex = -1;
       return null;
     }
 
-    this.currentIndex = (this.currentIndex + 1) % this.length;
+    this.currentIndex++;
 
     return this.songs[this.currentIndex];
   }
 
   public jumpSong(n: number): Song | null {
-    if (this.length === 0) return null;
+    if (n >= this.length || n < 0) return null;
 
-    this.currentIndex = Math.min(Math.max(n, 0), this.length - 1);
+    this.currentIndex = n;
 
     return this.songs[this.currentIndex];
   }
