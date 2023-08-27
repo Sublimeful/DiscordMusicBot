@@ -1,4 +1,4 @@
-import { Client } from "discord.js";
+import { Client, TextChannel } from "discord.js";
 import { CommandsMap } from "../Commands.ts";
 import CommandContext from "../structures/CommandContext.ts";
 import ServerMusic from "../structures/ServerMusic.ts";
@@ -24,7 +24,7 @@ export default (client: Client): void => {
 
       // Create music instance for guild here before any music commands are executed
       if (!context.guild.music) {
-        context.guild.music = new ServerMusic();
+        context.guild.music = new ServerMusic(context.interaction.channel as TextChannel);
 
         // Bind listeners to music player
         PlayerStateChange(context.guild.music, context.interaction.channel);

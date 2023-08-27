@@ -53,27 +53,33 @@ export async function createPagination(
   });
 
   collector.on("collect", async (i) => {
-   if (i.user.id !== interaction.user.id) {
-     i.reply({ content: `These buttons aren't for you!`, ephemeral: true });
-     return;
-   }
+    if (pages.length === 1) {
+      await i.deferUpdate();  // If there's only one page, then pressing 
+      return;                 // Previous or Next shouldn't do anything
+    }
+    if (i.user.id !== interaction.user.id) {
+      i.reply({ content: `These buttons aren't for you!`, ephemeral: true });
+      return;
+    }
 
-   switch (i.customId) {
-     case "Previous": {
-       page = page > 0 ? --page : pages.length - 1;
-       break;
-     }
-     case "Next": {
-       page = page + 1 < pages.length ? ++page : 0;
-       break;
-     }
-   }
-   await i.deferUpdate();
-   await i.editReply({
-     embeds: [pages[page].setFooter({ text: `Page ${page + 1} / ${pages.length}` })],
-     components: [row],
-   });
-   collector.resetTimer();
+    switch (i.customId) {
+      case "Previous": {
+        page = page > 0 ? --page : pages.length - 1;
+        break;
+      }
+      case "Next": {
+        page = page + 1 < pages.length ? ++page : 0;
+        break;
+      }
+    }
+
+    await i.deferUpdate();
+    await i.editReply({
+      embeds: [pages[page].setFooter({ text: `Page ${page + 1} / ${pages.length}` })],
+      components: [row],
+    });
+
+    collector.resetTimer();
   })
 
   collector.on("end", (_, reason) => {

@@ -4,6 +4,7 @@ import { Commands } from "./Commands.ts";
 import 'dotenv/config'
 import InteractionCreate from "./events/InteractionCreate.ts";
 import Ready from "./events/Ready.ts";
+import VoiceStateUpdate from "./events/VoiceStateUpdate.ts";
 
 const token = process.env.TOKEN ?? "";
 const clientId = process.env.CLIENTID ?? "";
@@ -20,7 +21,8 @@ const rest = new REST().setToken(token);
 })()
 
 // Bind events to listeners
-InteractionCreate(client)
-Ready(client)
+InteractionCreate(client);
+VoiceStateUpdate(client);
+Ready(client);
 
 client.login(token);

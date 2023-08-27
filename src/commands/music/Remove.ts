@@ -5,7 +5,7 @@ import { MessageType, createEmbed, createPagination } from "../../utils/Message.
 
 export default {
   data: new SlashCommandBuilder()
-  .setName("removes")
+  .setName("remove")
   .setDescription("Removes songs from the queue")
   .addSubcommand(new SlashCommandSubcommandBuilder()
     .setName("singular")
@@ -34,9 +34,9 @@ export default {
     const music = context.guild!.music!;
 
     if (context.interaction.options.getSubcommand() === "singular") {
-      const index = context.interaction.options.getInteger("index")!;
+      const index = context.interaction.options.getInteger("index")! - 1;
 
-      if (index - 1 >= music.songs.length) {
+      if (index >= music.songs.length) {
         const embed = createEmbed(MessageType.error, `Please enter a valid index from 1-${music.songs.length}`);
         return context.interaction.reply({ embeds: [embed] });
       }
@@ -45,15 +45,15 @@ export default {
       const embed = createEmbed(MessageType.info, `Removed song: ${removedSong.title}`);
       return context.interaction.reply({ embeds: [embed] });
     } else {
-      const from = context.interaction.options.getInteger("from")!;
-      const to = context.interaction.options.getInteger("to")!;
+      const from = context.interaction.options.getInteger("from")! - 1;
+      const to = context.interaction.options.getInteger("to")! - 1;
 
       if (to < from) {
         const embed = createEmbed(MessageType.error, `'to' must be greater than or equal to 'from'`);
         return context.interaction.reply({ embeds: [embed] });
         
       }
-      if (from - 1 >= music.songs.length || to - 1 >= music.songs.length) {
+      if (from >= music.songs.length || to >= music.songs.length) {
         const embed = createEmbed(MessageType.error, `Please enter valid indexes from 1-${music.songs.length}`);
         return context.interaction.reply({ embeds: [embed] });
       }

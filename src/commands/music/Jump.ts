@@ -18,16 +18,15 @@ export default {
     const music = context.guild!.music!;
     const interaction = context.interaction;
 
-    // 1-based index
-    const index = (interaction.options.getInteger("index"))!
+    const index = (interaction.options.getInteger("index"))! - 1;
 
-    if (index - 1 >= music.songs.length) {
+    if (index >= music.songs.length) {
       const message = `Please enter a valid range between: 1 - ${music.songs.length}`;
       const embed = createEmbed(MessageType.error, message);
       return context.interaction.reply({ embeds: [embed] });
     }
 
-    const skippedSong = music.jumpSong(index - 1);
+    const skippedSong = music.jumpSong(index);
     if (skippedSong) {
       const message = `Skipped: ${skippedSong.title}`;
       var embed = createEmbed(MessageType.info, message);

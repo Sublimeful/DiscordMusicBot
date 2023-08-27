@@ -15,16 +15,23 @@ export default {
     const pages: EmbedBuilder[] = []
     const songsPerPage = 5;
 
-    for (let i = 0; i < songs.length; i += songsPerPage) {
-      let songsList = "";
-      for (let j = 0; j < Math.min(songs.length - i, songsPerPage); j++) {
-        let currIndex = i + j;
-        let currSong = songs[currIndex];
-        songsList += `${currIndex === music.currentIndex ? "-> " : ""}${currIndex + 1}: ${currSong.title} \n`;
+    if (songs.length > 0) {
+      for (let i = 0; i < songs.length; i += songsPerPage) {
+        let songsList = "";
+        for (let j = 0; j < Math.min(songs.length - i, songsPerPage); j++) {
+          let currIndex = i + j;
+          let currSong = songs[currIndex];
+          songsList += `${currIndex === music.currentIndex ? "-> " : ""}${currIndex + 1}: ${currSong.title} \n`;
+        }
+        const page = new EmbedBuilder()
+          .setTitle("Queue")
+          .setDescription(songsList);
+        pages.push(page);
       }
+    } else {
       const page = new EmbedBuilder()
         .setTitle("Queue")
-        .setDescription(songsList);
+        .setDescription(`There are no songs, add some now!`);
       pages.push(page);
     }
 

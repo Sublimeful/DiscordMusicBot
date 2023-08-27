@@ -24,6 +24,7 @@ export async function getSongsFromQuery(query: string): Promise<Song[]> {
     default: {
       // Youtube search query
       const searchResults = await search(query, { limit: 1 });
+      if (searchResults.length === 0) break;  // No search results
       const info = await video_basic_info(searchResults[0].url);
       const song = new YTSong(info.video_details);
       songs.push(song)

@@ -2,10 +2,11 @@ import { AudioPlayer, AudioPlayerStatus, NoSubscriberBehavior, VoiceConnection, 
 import ServerQueue from "./ServerQueue.ts";
 import { Song } from "./Song.ts";
 import Debug from "./Debug.ts";
-
+import { TextChannel } from "discord.js";
+import { MessageType, createEmbed } from "../utils/Message.ts";
 
 export default class ServerMusic {
-  public queue: ServerQueue;
+  public readonly queue: ServerQueue = new ServerQueue();
   public readonly player: AudioPlayer = createAudioPlayer({
     behaviors: {
       noSubscriber: NoSubscriberBehavior.Play
@@ -30,13 +31,27 @@ export default class ServerMusic {
   public enqueue(songs: Song[]) {
     this.queue.enqueue(songs);
   }
-  
+
+  /**
+   * Removes songs in range 'from' to 'to' inclusive, if currently playing song is part
+   * of removed songs, then try to play the next song after removal
+   * @returns removed songs
+   */
   public remove(from: number, to = from) {
-    return this.queue.remove(from, to);
+    const removedSongs = this.queue.remove(from, to);
+    // Try to play next song after removal,
+    // If there is no next song, then player will enter EOF state
+    this.skipSong();
+    return removedSongs;
   }
 
+  /**
+   * Clears queue, enter EOF and stops playback
+   * @returns void
+   */
   public clear() {
     this.queue.clear();
+    this.stop();
   }
 
   /**
@@ -108,8 +123,13 @@ export default class ServerMusic {
     return skippedSong;
   }
 
-  public constructor() {
-    this.queue = new ServerQueue();
+  public destroy() {
+    this.stop();
+    this.connection?.disconnect();
+    delete this.textChannel.guild.music;
+  }
+
+  public constructor(public readonly textChannel: TextChannel) {
     this.currentState = this.player.state.status;
     this.previousState = this.player.state.status;
     this.player.on("stateChange", (oldState, newState) => {
@@ -120,6 +140,10 @@ export default class ServerMusic {
         // New song started playing
       } else if (newState.status === "idle") {
         this.skipSong();
+        if (this.currentIndex === -1) {
+          const embed = createEmbed(MessageType.info, `Now at tail of queue`);
+          this.textChannel.send({ embeds: [embed] });
+        }
       }
     })
     this.player.on("error", error => {
