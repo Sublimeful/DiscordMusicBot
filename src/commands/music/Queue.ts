@@ -21,7 +21,7 @@ export default {
 
     for (let i = 0; i < songs.length; i += songsPerPage) {
       let songsList = "";
-      for (let j = 0; j < songsPerPage; j++) {
+      for (let j = 0; j < Math.min(songs.length - i, songsPerPage); j++) {
         let currIndex = i + j;
         let currSong = songs[currIndex];
         songsList += `${currIndex === music.currentIndex ? "-> " : ""}${currIndex + 1}: ${currSong.title} \n`;
@@ -31,7 +31,7 @@ export default {
       pages.push(page);
     }
 
-    const initialPage = Math.floor(music.currentIndex / songsPerPage);
+    const initialPage = music.currentIndex === -1 ? 0 : Math.floor(music.currentIndex / songsPerPage);
     await createPagination(context.interaction, pages, initialPage);
   }
 };

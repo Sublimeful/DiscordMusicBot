@@ -46,7 +46,10 @@ export default class ServerMusic {
   public skipSong() {
     const skippedSong = this.currentSong;
     const newSong = this.nextSong();
-    if (newSong) this.play(newSong);
+    if (newSong)
+      this.play(newSong);
+    else
+      this.stop();
     return skippedSong;
   }
   
@@ -55,9 +58,14 @@ export default class ServerMusic {
    * @returns null
    */
   public stop() {
+    this.player.pause();
     this.player.stop();
   }
 
+  /**
+   * Immediately plays a song
+   * @returns null
+   */
   public async play(song: Song) {
     if (!this.connection) {
       return Debug.error("'play' function called when the bot is not connected to a voice channel!");

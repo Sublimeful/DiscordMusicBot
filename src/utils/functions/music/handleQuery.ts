@@ -35,17 +35,12 @@ export default async function handleQuery(context: CommandContext, query: string
     return context.interaction.reply({ embeds: [embed] });
   }
 
-  if (music.currentState !== "idle") return;  // Only play song when nothing is playing
-
-  // guaranteed to be a next song since we just added some
-  const currentSong = music.nextSong()!
-
-  Debug.log(currentSong)
+  if (music.currentIndex !== -1) return;  // Only play song when queue is at it's EOF state
 
   try {
     // try joining the Voice Channel the user who ran the command is in
     music.connection = joinVC(context.guild, context.voiceChannel);
-    music.play(currentSong);  // Play the song in the voice channel
+    music.jumpSong(music.songs.length - songs.length);  // Jump to the first song of the added songs
   } catch(error) {
     delete context.guild.music;
   }

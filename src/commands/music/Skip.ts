@@ -14,14 +14,19 @@ export default {
       return Debug.error("'skip' command somehow executed when not in a guild or guild music structure not created!");
     }
 
-    const skippedSong = context.guild.music.skipSong();
+    const music = context.guild.music;
+    const skippedSong = music.skipSong();
+    const embeds = [];
 
-    if (skippedSong)
-      var message = `Skipped: ${skippedSong.title}`;
-    else
-      var message = `Nothing was skipped, at tail of queue!`;
+    if (skippedSong) {
+      embeds.push(createEmbed(MessageType.info, `Skipped: ${skippedSong.title}`));
+      if (music.currentIndex === -1) {
+        embeds.push(createEmbed(MessageType.info, `Now at tail of queue`));
+      }
+    } else {
+      embeds.push(createEmbed(MessageType.info, `Restarting playback from the beginning of the queue!`));
+    }
 
-    const embed = createEmbed(MessageType.info, message);
-    return context.interaction.reply({ embeds: [embed] });
+    return context.interaction.reply({ embeds });
   }
 };
