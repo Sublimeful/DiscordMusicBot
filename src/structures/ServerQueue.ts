@@ -32,6 +32,14 @@ export default class ServerQueue {
     return this.songs[this.currentIndex];
   }
 
+  public jumpSong(n: number): Song | null {
+    if (this.length === 0) return null;
+
+    this.currentIndex = Math.min(Math.max(n, 0), this.length - 1);
+
+    return this.songs[this.currentIndex];
+  }
+
   public get length() {
     return this.songs.length;
   }

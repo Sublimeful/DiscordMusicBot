@@ -1,7 +1,7 @@
-import { SlashCommandBuilder, ChatInputCommandInteraction, SlashCommandStringOption, EmbedBuilder } from "discord.js";
+import { SlashCommandBuilder, EmbedBuilder } from "discord.js";
 import CommandContext from "../../structures/CommandContext.ts";
 import { inVC, sameVC } from "../../utils/VoiceChannel.ts";
-import { MessageType, createEmbed, createPagination } from "../../utils/Message.ts";
+import { createPagination } from "../../utils/Message.ts";
 import Debug from "../../structures/Debug.ts";
 
 export default {
@@ -14,7 +14,8 @@ export default {
       return Debug.error("'queue' command somehow executed when not in a guild or guild music structure not created!");
     }
 
-    const songs = context.guild.music.queue.songs;
+    const music = context.guild.music;
+    const songs = music.songs;
     const pages: EmbedBuilder[] = []
     const songsPerPage = 5;
 
@@ -23,13 +24,14 @@ export default {
       for (let j = 0; j < songsPerPage; j++) {
         let currIndex = i + j;
         let currSong = songs[currIndex];
-        songsList += `${currIndex + 1}: ${currSong.title} \n`;
+        songsList += `${currIndex === music.currentIndex ? "-> " : ""}${currIndex + 1}: ${currSong.title} \n`;
       }
       const page = new EmbedBuilder()
         .setDescription(songsList);
       pages.push(page);
     }
 
-    await createPagination(context.interaction, pages);
+    const initialPage = Math.floor(music.currentIndex / songsPerPage);
+    await createPagination(context.interaction, pages, initialPage);
   }
 };

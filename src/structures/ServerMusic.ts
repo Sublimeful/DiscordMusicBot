@@ -15,6 +15,14 @@ export default class ServerMusic {
   public currentState: AudioPlayerStatus;
   public previousState: AudioPlayerStatus;
 
+  public get songs(): Song[] {
+    return this.queue.songs;
+  }
+
+  public get currentIndex(): number {
+    return this.queue.currentIndex;
+  }
+
   public get currentSong(): Song | null {
     return this.queue.currentSong;
   }
@@ -38,6 +46,19 @@ export default class ServerMusic {
   public skipSong() {
     const skippedSong = this.currentSong;
     const newSong = this.nextSong();
+    if (newSong) play(this, newSong);
+    return skippedSong;
+  }
+
+  /**
+   * Sets the queue's current index to n or length of the queue, whichever is lower,
+   * and plays the songs at that index
+   * @param n the index to set the index to
+   * @returns skipped song, null if nothing was skipped
+   **/
+  public jumpSong(n: number) {
+    const skippedSong = this.currentSong;
+    const newSong = this.queue.jumpSong(n);
     if (newSong) play(this, newSong);
     return skippedSong;
   }

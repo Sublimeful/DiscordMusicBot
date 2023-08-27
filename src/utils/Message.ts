@@ -23,11 +23,12 @@ export function createEmbed(type: MessageType, message: string): EmbedBuilder {
 export async function createPagination(
   interaction: ChatInputCommandInteraction<CacheType>,
   pages: EmbedBuilder[],
+  initialPage = 0,
   timeout = 120000
 ) {
   if (!interaction.deferred) await interaction.deferReply();
 
-  let page = 0;
+  let page = initialPage;
 
   const navigationButtons = [
     new ButtonBuilder()

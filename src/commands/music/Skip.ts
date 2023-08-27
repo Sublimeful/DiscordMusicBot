@@ -21,7 +21,7 @@ export default {
     else
       var message = `Nothing was skipped, at tail of queue!`;
 
-    const embed = createEmbed(MessageType.error, message);
+    const embed = createEmbed(MessageType.info, message);
     return context.interaction.reply({ embeds: [embed] });
   }
 };
