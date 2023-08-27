@@ -1,20 +1,16 @@
 import { SlashCommandBuilder, EmbedBuilder } from "discord.js";
 import CommandContext from "../../structures/CommandContext.ts";
-import { inVC, sameVC } from "../../utils/VoiceChannel.ts";
+import { inVC, sameVC, validVC } from "../../utils/VoiceChannel.ts";
 import { createPagination } from "../../utils/Message.ts";
-import Debug from "../../structures/Debug.ts";
 
 export default {
   data: new SlashCommandBuilder()
   .setName("queue")
   .setDescription("Displays the current queue"),
   async execute(context: CommandContext) {
-    if (!inVC(context) || !sameVC(context)) return;
-    if (!context.guild || !context.guild.music) {
-      return Debug.error("'queue' command somehow executed when not in a guild or guild music structure not created!");
-    }
+    if (!inVC(context) || !sameVC(context) || !validVC(context)) return;
 
-    const music = context.guild.music;
+    const music = context.guild!.music!;
     const songs = music.songs;
     const pages: EmbedBuilder[] = []
     const songsPerPage = 5;
@@ -27,6 +23,7 @@ export default {
         songsList += `${currIndex === music.currentIndex ? "-> " : ""}${currIndex + 1}: ${currSong.title} \n`;
       }
       const page = new EmbedBuilder()
+        .setTitle("Queue")
         .setDescription(songsList);
       pages.push(page);
     }

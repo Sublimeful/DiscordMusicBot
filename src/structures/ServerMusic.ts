@@ -30,6 +30,14 @@ export default class ServerMusic {
   public enqueue(songs: Song[]) {
     this.queue.enqueue(songs);
   }
+  
+  public remove(from: number, to = from) {
+    return this.queue.remove(from, to);
+  }
+
+  public clear() {
+    this.queue.clear();
+  }
 
   /**
    * Gets the next song from the queue, this advances the queue's currentSong pointer
@@ -67,15 +75,24 @@ export default class ServerMusic {
    * @returns null
    */
   public async play(song: Song) {
+    // This shouldn't happen! Play should always be called when bot is connected to a VC
     if (!this.connection) {
       return Debug.error("'play' function called when the bot is not connected to a voice channel!");
     }
 
     const stream = await song.getStream();
-    const resource = createAudioResource(stream.stream, {inputType: stream.type });
+    const resource = createAudioResource(stream.stream, { inputType: stream.type });
 
     this.player.play(resource);
     this.connection.subscribe(this.player);
+  }
+
+  public pause() {
+    this.player.pause();
+  }
+
+  public resume() {
+    this.player.unpause();
   }
 
   /**

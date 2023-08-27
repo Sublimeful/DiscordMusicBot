@@ -1,36 +1,41 @@
 import { SlashCommandBuilder, SlashCommandIntegerOption } from "discord.js";
 import CommandContext from "../../structures/CommandContext.ts";
-import { inVC, sameVC } from "../../utils/VoiceChannel.ts";
-import Debug from "../../structures/Debug.ts";
+import { inVC, sameVC, validVC } from "../../utils/VoiceChannel.ts";
 import { MessageType, createEmbed } from "../../utils/Message.ts";
 
 export default {
   data: new SlashCommandBuilder()
   .setName("jump")
-  .setDescription("Plays something from the internet!")
+  .setDescription("Skip to certain index of the queue!")
   .addIntegerOption(new SlashCommandIntegerOption()
                       .setName("index")
                       .setMinValue(1)
                       .setRequired(true)
-                      .setDescription("Skip to certain index of the queue")),
+                      .setDescription("The index to jump to")),
   async execute(context: CommandContext) {
-    if (!inVC(context) || !sameVC(context)) return;
-    if (!context.guild || !context.guild.music) {
-      return Debug.error("'jump' command somehow executed when not in a guild or guild music structure not created!");
-    }
+    if (!inVC(context) || !sameVC(context) || !validVC(context)) return;
 
-    const music = context.guild.music;
+    const music = context.guild!.music!;
     const interaction = context.interaction;
+
+    // 1-based index
     const index = (interaction.options.getInteger("index"))!
 
-    // Index starts at 1, but jumpSong starts at 0
-    const skippedSong = music.jumpSong(index - 1);
-    if (skippedSong)
-      var message = `Skipped: ${skippedSong.title}`;
-    else
-      var message = `Please enter a valid range between: 1 - ${music.songs.length}`;
+    if (index - 1 >= music.songs.length) {
+      const message = `Please enter a valid range between: 1 - ${music.songs.length}`;
+      const embed = createEmbed(MessageType.error, message);
+      return context.interaction.reply({ embeds: [embed] });
+    }
 
-    const embed = createEmbed(MessageType.info, message);
+    const skippedSong = music.jumpSong(index - 1);
+    if (skippedSong) {
+      const message = `Skipped: ${skippedSong.title}`;
+      var embed = createEmbed(MessageType.info, message);
+    } else {
+      const message = `Nothing was skipped`;
+      var embed = createEmbed(MessageType.info, message);
+    }
+
     return context.interaction.reply({ embeds: [embed] });
   }
 };

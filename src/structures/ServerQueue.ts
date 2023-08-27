@@ -1,3 +1,4 @@
+import Debug from "./Debug";
 import { Song } from "./Song";
 
 export default class ServerQueue {
@@ -36,6 +37,18 @@ export default class ServerQueue {
 
   public get length() {
     return this.songs.length;
+  }
+
+  public remove(from: number, to = from): Song[] {
+    if (to < from) {
+      Debug.error(`'remove' command: to < from`);
+      return [];
+    }
+    if (to < 0 || to >= this.length || from < 0 || from >= this.length) {
+      Debug.error(`'remove' command: either from or to index out of range`);
+      return [];
+    }
+    return this.songs.splice(from, to - from + 1);
   }
 
   public clear() {

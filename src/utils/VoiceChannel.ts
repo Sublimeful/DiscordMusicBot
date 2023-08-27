@@ -1,7 +1,7 @@
 import { joinVoiceChannel, VoiceConnection } from "@discordjs/voice";
 import CommandContext from "../structures/CommandContext";
 import { createEmbed, MessageType } from "./Message";
-import { Guild, VoiceBasedChannel } from "discord.js";
+import { Guild, PermissionFlagsBits, VoiceBasedChannel } from "discord.js";
 
 
 /**
@@ -32,6 +32,33 @@ export const sameVC = function (context: CommandContext) {
   const botVoiceChannel = context.guild?.music?.connection?.joinConfig.channelId ?? context.guild?.members.me?.voice.channelId;
   if (context.voiceChannel?.id !== botVoiceChannel) {
     const message = "Error: You are not in the same voice channel as the bot!";
+    const embed = createEmbed(MessageType.error, message);
+    context.interaction.reply({ embeds: [embed] });
+    return false;
+  }
+
+  return true;
+}
+
+/**
+ * Checks if the voice channel user is in is valid
+ * @returns true if it is, else false
+ */
+export const validVC = function(context: CommandContext) {
+  const voiceChannel = context.voiceChannel;
+  
+  if (!context.guild?.members.me) return true;
+  if (voiceChannel?.id === context.guild.members.me.voice.channelId) return true;
+
+  if (!voiceChannel?.joinable) {
+    const message = "Error: Cannot join voice channel!";
+    const embed = createEmbed(MessageType.error, message);
+    context.interaction.reply({ embeds: [embed] });
+    return false;
+  }
+
+  if (!voiceChannel.permissionsFor(context.guild.members.me).has(PermissionFlagsBits.Speak)) {
+    const message = "Error: I have no permissions to speak in that VC!";
     const embed = createEmbed(MessageType.error, message);
     context.interaction.reply({ embeds: [embed] });
     return false;

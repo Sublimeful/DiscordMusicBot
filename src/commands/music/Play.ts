@@ -1,7 +1,7 @@
 import { SlashCommandBuilder, SlashCommandStringOption } from "discord.js";
 import CommandContext from "../../structures/CommandContext.ts";
 import handleQuery from "../../utils/functions/music/handleQuery.ts";
-import { inVC, sameVC } from "../../utils/VoiceChannel.ts";
+import { inVC, sameVC, validVC } from "../../utils/VoiceChannel.ts";
 
 export default {
   data: new SlashCommandBuilder()
@@ -12,7 +12,7 @@ export default {
                   .setDescription("A search query")
                   .setRequired(true)),
   async execute(context: CommandContext) {
-    if (!inVC(context) || !sameVC(context)) return;
+    if (!inVC(context) || !sameVC(context) || !validVC(context)) return;
 
     const interaction = context.interaction;
     const query = (interaction.options.getString("query"))!

@@ -1,20 +1,16 @@
 import { SlashCommandBuilder } from "discord.js";
 import CommandContext from "../../structures/CommandContext.ts";
-import { inVC, sameVC } from "../../utils/VoiceChannel.ts";
+import { inVC, sameVC, validVC } from "../../utils/VoiceChannel.ts";
 import { MessageType, createEmbed } from "../../utils/Message.ts";
-import Debug from "../../structures/Debug.ts";
 
 export default {
   data: new SlashCommandBuilder()
   .setName("skip")
   .setDescription("Skips the current song!"),
   async execute(context: CommandContext) {
-    if (!inVC(context) || !sameVC(context)) return;
-    if (!context.guild || !context.guild.music) {
-      return Debug.error("'skip' command somehow executed when not in a guild or guild music structure not created!");
-    }
+    if (!inVC(context) || !sameVC(context) || !validVC(context)) return;
 
-    const music = context.guild.music;
+    const music = context.guild!.music!;
     const skippedSong = music.skipSong();
     const embeds = [];
 

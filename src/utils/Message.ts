@@ -1,6 +1,4 @@
-import { ActionRow, ActionRowBuilder, ButtonBuilder, ButtonStyle, CacheType, ChatInputCommandInteraction, ComponentType, Embed, EmbedBuilder, MessageCreateOptions, TextBasedChannel } from "discord.js";
-import Debug from "../structures/Debug";
-import CommandContext from "../structures/CommandContext";
+import { ActionRowBuilder, ButtonBuilder, ButtonStyle, CacheType, ChatInputCommandInteraction, ComponentType, EmbedBuilder } from "discord.js";
 
 export enum MessageType {
   "info",
