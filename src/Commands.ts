@@ -8,8 +8,9 @@ import Remove from "./commands/music/Remove.ts";
 import Resume from "./commands/music/Resume.ts";
 import Skip from "./commands/music/Skip.ts";
 import Stop from "./commands/music/Stop.ts";
+import Radio from "./commands/music/Radio.ts";
 
-export const Commands = [Play, Skip, Queue, Jump, Pause, Resume, Stop, Clear, NowPlaying, Remove]
+export const Commands = [Play, Skip, Queue, Jump, Pause, Resume, Stop, Clear, NowPlaying, Remove, Radio]
 export const CommandsMap = new Map<string, any>();
 
 for(const cmd of Commands) {

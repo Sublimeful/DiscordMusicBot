@@ -5,6 +5,10 @@ import Debug from "./Debug.ts";
 import { TextChannel } from "discord.js";
 import { MessageType, createEmbed } from "../utils/Message.ts";
 
+interface ServerMusicOptions {
+  radio: boolean
+}
+
 export default class ServerMusic {
   public readonly queue: ServerQueue = new ServerQueue();
   public readonly player: AudioPlayer = createAudioPlayer({
@@ -15,6 +19,7 @@ export default class ServerMusic {
   public connection: VoiceConnection | null = null;
   public currentState: AudioPlayerStatus;
   public previousState: AudioPlayerStatus;
+  public options: ServerMusicOptions = { radio: true };
 
   public get songs(): Song[] {
     return this.queue.songs;
@@ -26,6 +31,14 @@ export default class ServerMusic {
 
   public get currentSong(): Song | null {
     return this.queue.currentSong;
+  }
+
+  public get radio() {
+    return this.options.radio;
+  }
+
+  public set radio(v: boolean) {
+    this.options.radio = v;
   }
 
   public enqueue(songs: Song[]) {
@@ -133,11 +146,25 @@ export default class ServerMusic {
     this.currentState = this.player.state.status;
     this.previousState = this.player.state.status;
     this.player.on("stateChange", (oldState, newState) => {
-      console.log(`Player has changed state from ${oldState.status} to ${newState.status}`);
+      Debug.log(`Player has changed state from ${oldState.status} to ${newState.status}`, "Music Player");
       this.currentState = newState.status;
       this.previousState = oldState.status;
       if (newState.status === "playing" && oldState.status !== "paused") {
         // New song started playing
+        const newSong = this.currentSong!;
+        const message = `Playing: ${newSong.title}`;
+        const embed = createEmbed(MessageType.info, message);
+        textChannel.send({ embeds: [embed] });
+
+        // If radio mode is on, then add related songs to queue
+        if (this.radio) {
+          const myUniqueQueue: Set<string> = new Set();
+          for (const song of this.songs) {
+            myUniqueQueue.add(song.url);
+          }
+          newSong.getRelatedSongs(5, myUniqueQueue)
+            .then(songs => this.enqueue(songs));
+        }
       } else if (newState.status === "idle") {
         this.skipSong();
         if (this.currentIndex === -1) {
