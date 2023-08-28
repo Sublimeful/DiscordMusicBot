@@ -146,7 +146,6 @@ export default class ServerMusic {
     this.currentState = this.player.state.status;
     this.previousState = this.player.state.status;
     this.player.on("stateChange", (oldState, newState) => {
-      Debug.log(`Player has changed state from ${oldState.status} to ${newState.status}`, "Music Player");
       this.currentState = newState.status;
       this.previousState = oldState.status;
       if (newState.status === "playing" && oldState.status !== "paused") {

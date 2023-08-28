@@ -1,6 +1,5 @@
 import { SoundCloudStream, YouTubeStream, YouTubeVideo, stream, video_basic_info } from "play-dl";
 import { getSongsFromQuery } from "../utils/functions/music/getSongsFromQuery";
-import Debug from "./Debug";
 
 export abstract class Song {
   public constructor(protected info: YouTubeVideo) {}
