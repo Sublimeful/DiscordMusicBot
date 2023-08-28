@@ -51,10 +51,12 @@ export default class ServerMusic {
    * @returns removed songs
    */
   public remove(from: number, to = from) {
+    const currentSongIsRemoved = this.currentIndex >= from &&
+                                 this.currentIndex <= to;
     const removedSongs = this.queue.remove(from, to);
-    // Try to play next song after removal,
+    // Try to play next song if the current song is part of removed songs,
     // If there is no next song, then player will enter EOF state
-    this.skipSong();
+    if (currentSongIsRemoved) this.skipSong();
     return removedSongs;
   }
 

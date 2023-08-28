@@ -1,4 +1,4 @@
-import { Client, VoiceState } from "discord.js";
+import { Client, StageChannel, VoiceChannel, VoiceState } from "discord.js";
 import { MessageType, createEmbed } from "../utils/Message";
 
 export default (client: Client): void => {
@@ -7,8 +7,10 @@ export default (client: Client): void => {
     if (!music) return;
     const oldVC = oldState.channel;
     const newVC = newState.channel;
+    const oldMember = oldState.member;
+    const botID = client.user?.id;
     // Disconnected from voice channel
-    if (oldVC && !newVC) {
+    if (oldMember?.id === botID && oldVC && !newVC) {
       music.destroy();
       const message = `Disconnected from the voice channel, the queue has been deleted`;
       const embed = createEmbed(MessageType.info, message);

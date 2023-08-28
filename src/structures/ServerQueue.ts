@@ -48,7 +48,9 @@ export default class ServerQueue {
       Debug.error(`'remove' command: either from or to index out of range`);
       return [];
     }
-    this.currentIndex = from - 1;
+    if (this.currentIndex >= from && this.currentIndex <= to) {
+      this.currentIndex = from - 1;
+    }
     return this.songs.splice(from, to - from + 1);
   }
 
