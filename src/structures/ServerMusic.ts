@@ -163,7 +163,12 @@ export default class ServerMusic {
             myUniqueQueue.add(song.url);
           }
           newSong.getRelatedSongs(5, myUniqueQueue)
-            .then(songs => this.enqueue(songs));
+            .then(songs => {
+              this.enqueue(songs);
+              const message = `Added: ${songs.length} related songs`;
+              const embed = createEmbed(MessageType.info, message);
+              this.textChannel.send({ embeds: [embed] });
+            });
         }
       } else if (newState.status === "idle") {
         this.skipSong();
