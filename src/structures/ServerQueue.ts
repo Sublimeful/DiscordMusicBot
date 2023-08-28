@@ -50,6 +50,8 @@ export default class ServerQueue {
     }
     if (this.currentIndex >= from && this.currentIndex <= to) {
       this.currentIndex = from - 1;
+    } else if (to < this.currentIndex) {
+      this.currentIndex -= to - from + 1;
     }
     return this.songs.splice(from, to - from + 1);
   }

@@ -19,7 +19,7 @@ export default class ServerMusic {
   public connection: VoiceConnection | null = null;
   public currentState: AudioPlayerStatus;
   public previousState: AudioPlayerStatus;
-  public options: ServerMusicOptions = { radio: true };
+  public options: ServerMusicOptions = { radio: false };
 
   public get songs(): Song[] {
     return this.queue.songs;
@@ -163,7 +163,7 @@ export default class ServerMusic {
           for (const song of this.songs) {
             myUniqueQueue.add(song.url);
           }
-          newSong.getRelatedSongs(5, myUniqueQueue)
+          newSong.getRelatedSongs(1, myUniqueQueue)
             .then(songs => {
               this.enqueue(songs);
               const message = `Added: ${songs.length} related songs`;
