@@ -1,4 +1,4 @@
-import { AudioPlayer, AudioPlayerStatus, NoSubscriberBehavior, VoiceConnection, createAudioPlayer, createAudioResource } from "@discordjs/voice";
+import { AudioPlayer, AudioPlayerStatus, NoSubscriberBehavior, StreamType, VoiceConnection, createAudioPlayer, createAudioResource } from "@discordjs/voice";
 import ServerQueue from "./ServerQueue.ts";
 import { Song } from "./Song.ts";
 import Debug from "./Debug.ts";
@@ -111,7 +111,7 @@ export default class ServerMusic {
     }
 
     const stream = await song.getStream();
-    const resource = createAudioResource(stream.stream, { inputType: stream.type });
+    const resource = createAudioResource(stream, { inlineVolume: true, inputType: StreamType.OggOpus, metadata: song });
 
     this.player.play(resource);
     this.connection.subscribe(this.player);

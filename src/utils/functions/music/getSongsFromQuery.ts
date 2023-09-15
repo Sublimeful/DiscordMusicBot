@@ -1,4 +1,4 @@
-import { Song, YTSong } from "../../../structures/Song";
+import { Song, YTSong } from "../../../structures/Song.ts";
 import { playlist_info, search, validate, video_basic_info } from "play-dl";
 
 export async function getSongsFromQuery(query: string): Promise<Song[]> {

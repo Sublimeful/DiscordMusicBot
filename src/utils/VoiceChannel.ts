@@ -1,6 +1,6 @@
 import { joinVoiceChannel, VoiceConnection } from "@discordjs/voice";
-import CommandContext from "../structures/CommandContext";
-import { createEmbed, MessageType } from "./Message";
+import CommandContext from "../structures/CommandContext.ts";
+import { createEmbed, MessageType } from "./Message.ts";
 import { Guild, PermissionFlagsBits, VoiceBasedChannel } from "discord.js";
 
 

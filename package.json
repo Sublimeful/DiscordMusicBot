@@ -1,10 +1,11 @@
 {
+  "type": "module",
   "name": "discordmusicbot",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "ts-node src/Bot.ts"
+    "start": "ts-node-esm src/Bot.ts"
   },
   "author": "",
   "license": "ISC",

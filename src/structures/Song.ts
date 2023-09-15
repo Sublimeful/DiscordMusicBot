@@ -1,5 +1,33 @@
-import { SoundCloudStream, YouTubeStream, YouTubeVideo, stream, video_basic_info } from "play-dl";
-import { getSongsFromQuery } from "../utils/functions/music/getSongsFromQuery";
+import { YouTubeVideo, video_basic_info } from "play-dl";
+import { getSongsFromQuery } from "../utils/functions/music/getSongsFromQuery.ts";
+import prism from "prism-media"
+import { Readable } from "stream";
+import { exec } from "../yt-dlp-utils/index.js";
+
+async function getStream(url: string): Promise<Readable> {
+  return new Promise((resolve, reject) => {
+    const stream = exec(
+      url,
+      {
+        output: "-",
+        quiet: true,
+        format: "bestaudio",
+        limitRate: "100K"
+      },
+      {
+        stdio: ["ignore", "pipe", "ignore"]
+      }
+    );
+
+    if (!stream.stdout) {
+      reject(Error("Unable to retrieve audio data from the URL."));
+    }
+
+    void stream.on("spawn", () => {
+      resolve(stream.stdout!);
+    });
+  });
+}
 
 export abstract class Song {
   public constructor(protected info: YouTubeVideo) {}
@@ -12,8 +40,16 @@ export abstract class Song {
 
   public abstract getRelatedSongs(limit?: number, queue?: Set<string>): Promise<Song[]>;
 
-  public async getStream() : Promise<YouTubeStream | SoundCloudStream> {
-    return stream(this.url);
+  public async getStream() {
+    const stream = new prism.FFmpeg({
+        args: ["-loglevel", "0",
+               "-ar", "48000",
+               "-ac", "2",
+               "-f", "opus",
+               "-acodec", "libopus"]
+    });
+    (await getStream(this.url)).pipe(stream);
+    return stream;
   }
 }
 
