@@ -1,7 +1,7 @@
-import CommandContext from "../../../structures/CommandContext";
-import { getSongsFromQuery } from "./getSongsFromQuery";
-import { MessageType, createEmbed } from "../../Message";
-import { joinVC } from "../../VoiceChannel";
+import CommandContext from "../../../structures/CommandContext.ts";
+import { getSongsFromQuery } from "./getSongsFromQuery.ts";
+import { MessageType, createEmbed } from "../../Message.ts";
+import { joinVC } from "../../VoiceChannel.ts";
 
 export default async function handleQuery(context: CommandContext, query: string) {
   // These 3 things must be truthy

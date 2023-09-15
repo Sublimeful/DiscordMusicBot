@@ -1,5 +1,5 @@
 import { Client, StageChannel, VoiceChannel, VoiceState } from "discord.js";
-import { MessageType, createEmbed } from "../utils/Message";
+import { MessageType, createEmbed } from "../utils/Message.ts";
 
 export default (client: Client): void => {
   client.on("voiceStateUpdate", async (oldState: VoiceState, newState: VoiceState) => {

@@ -1,5 +1,5 @@
-import Debug from "./Debug";
-import { Song } from "./Song";
+import Debug from "./Debug.ts";
+import { Song } from "./Song.ts";
 
 export default class ServerQueue {
   public songs: Song[];

@@ -1,10 +1,14 @@
 import { Client, GatewayIntentBits, REST, Routes} from "discord.js"
 import { Commands } from "./Commands.ts";
+import { downloadExecutable } from "./yt-dlp-utils/index.js";
 
 import 'dotenv/config'
 import InteractionCreate from "./events/InteractionCreate.ts";
 import Ready from "./events/Ready.ts";
 import VoiceStateUpdate from "./events/VoiceStateUpdate.ts";
+
+// Download yt-dlp executable first
+downloadExecutable();
 
 const token = process.env.TOKEN ?? "";
 const clientId = process.env.CLIENTID ?? "";

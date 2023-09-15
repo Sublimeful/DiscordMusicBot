@@ -1,5 +1,7 @@
-import { SoundCloudStream, YouTubeStream, YouTubeVideo, stream, video_basic_info } from "play-dl";
-import { getSongsFromQuery } from "../utils/functions/music/getSongsFromQuery";
+import { YouTubeVideo, video_basic_info } from "play-dl";
+import { getSongsFromQuery } from "../utils/functions/music/getSongsFromQuery.ts";
+import { getStream } from "../utils/functions/music/getStream.ts";
+import prism from "prism-media"
 
 export abstract class Song {
   public constructor(protected info: YouTubeVideo) {}
@@ -12,8 +14,16 @@ export abstract class Song {
 
   public abstract getRelatedSongs(limit?: number, queue?: Set<string>): Promise<Song[]>;
 
-  public async getStream() : Promise<YouTubeStream | SoundCloudStream> {
-    return stream(this.url);
+  public async getStream() {
+    const stream = new prism.FFmpeg({
+        args: ["-loglevel", "0",
+               "-ar", "48000",
+               "-ac", "2",
+               "-f", "opus",
+               "-acodec", "libopus"]
+    });
+    (await getStream(this.url)).pipe(stream);
+    return stream;
   }
 }
 
