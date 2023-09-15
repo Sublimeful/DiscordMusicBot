@@ -74,10 +74,27 @@ export const validVC = function(context: CommandContext) {
  * @returns a voice connection
  */
 export const joinVC = function(guild: Guild, voiceChannel: VoiceBasedChannel): VoiceConnection {
-  return joinVoiceChannel({
+  const voiceConnection = joinVoiceChannel({
     adapterCreator: guild.voiceAdapterCreator,
     channelId: voiceChannel.id,
     guildId: guild.id,
     selfDeaf: true
   });
+  
+  //<{{ Fix for youtube livestreams cutting out in the middle of playback
+  const networkStateChangeHandler = (oldNetworkState: any, newNetworkState: any) => {
+    const newUdp = Reflect.get(newNetworkState, 'udp');
+    clearInterval(newUdp?.keepAliveInterval);
+  }
+
+  voiceConnection.on('stateChange', (oldState, newState) => {
+    const oldNetworking = Reflect.get(oldState, 'networking');
+    const newNetworking = Reflect.get(newState, 'networking');
+
+    oldNetworking?.off('stateChange', networkStateChangeHandler);
+    newNetworking?.on('stateChange', networkStateChangeHandler);
+  });
+  //}}>
+
+  return voiceConnection;
 }
