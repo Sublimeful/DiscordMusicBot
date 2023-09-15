@@ -15,7 +15,7 @@ export async function getSongsFromQuery(query: string): Promise<Song[]> {
         break;
       }
       case "yt_playlist": {
-        const playlist = await playlist_info(query);
+        const playlist = await playlist_info(query, { incomplete: true });
         const allVideos = await playlist.all_videos();
         for (const video of allVideos) {
           const song = new YTSong(video);
