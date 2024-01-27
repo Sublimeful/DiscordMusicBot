@@ -9,7 +9,6 @@ export async function getStream(url: string): Promise<Readable> {
         output: "-",
         quiet: true,
         format: "bestaudio",
-        limitRate: "100K"
       },
       {
         stdio: ["ignore", "pipe", "ignore"]
