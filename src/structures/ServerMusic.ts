@@ -4,9 +4,14 @@ import { Song } from "./Song.ts";
 import Debug from "./Debug.ts";
 import { TextChannel } from "discord.js";
 import { MessageType, createEmbed } from "../utils/Message.ts";
+import { getRelatedSongs } from "../utils/functions/music/getRelatedSongs.ts";
 
 interface ServerMusicOptions {
-  radio: boolean
+  radio: {
+    isOn: boolean,
+    relatedSongsLimit: number,
+    suggestUniqueSongs: boolean,
+  }
 }
 
 export default class ServerMusic {
@@ -19,7 +24,13 @@ export default class ServerMusic {
   public connection: VoiceConnection | null = null;
   public currentState: AudioPlayerStatus;
   public previousState: AudioPlayerStatus;
-  public options: ServerMusicOptions = { radio: false };
+  public options: ServerMusicOptions = {
+    radio: {
+      isOn: false,
+      relatedSongsLimit: 1,
+      suggestUniqueSongs: true,
+    },
+  };
 
   public get songs(): Song[] {
     return this.queue.songs;
@@ -31,14 +42,6 @@ export default class ServerMusic {
 
   public get currentSong(): Song | null {
     return this.queue.currentSong;
-  }
-
-  public get radio() {
-    return this.options.radio;
-  }
-
-  public set radio(v: boolean) {
-    this.options.radio = v;
   }
 
   public enqueue(songs: Song[]) {
@@ -158,15 +161,19 @@ export default class ServerMusic {
         textChannel.send({ embeds: [embed] });
 
         // If radio mode is on, then add related songs to queue
-        if (this.radio) {
-          const myUniqueQueue: Set<string> = new Set();
-          for (const song of this.songs) {
-            myUniqueQueue.add(song.url);
+        if (this.options.radio.isOn) {
+          const filterList: Set<string> = new Set();
+          if (this.options.radio.suggestUniqueSongs) {
+            for (const song of this.songs) {
+              filterList.add(song.id);
+            }
           }
-          newSong.getRelatedSongs(1, myUniqueQueue)
+          getRelatedSongs(newSong, filterList, this.options.radio.relatedSongsLimit)
             .then(songs => {
-              this.enqueue(songs);
-              const message = `Added: ${songs.length} related songs`;
+              const songsToBeAdded = songs.slice(0, this.options.radio.relatedSongsLimit);
+              this.enqueue(songsToBeAdded);
+
+              const message = `Added: ${songsToBeAdded.length} related songs`;
               const embed = createEmbed(MessageType.info, message);
               this.textChannel.send({ embeds: [embed] });
             });

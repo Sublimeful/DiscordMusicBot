@@ -1,5 +1,4 @@
-import { YouTubeVideo, video_basic_info } from "play-dl";
-import { getSongsFromQuery } from "../utils/functions/music/getSongsFromQuery.ts";
+import { YouTubeVideo } from "play-dl";
 import { getStream } from "../utils/functions/music/getStream.ts";
 import prism from "prism-media"
 
@@ -10,9 +9,9 @@ export abstract class Song {
 
   public abstract get url(): string;
 
-  public abstract toString(): string;
+  public abstract get id(): string;
 
-  public abstract getRelatedSongs(limit?: number, queue?: Set<string>): Promise<Song[]>;
+  public abstract toString(): string;
 
   public async getStream() {
     const stream = new prism.FFmpeg({
@@ -36,19 +35,8 @@ export class YTSong extends Song {
     return this.info.url;
   }
 
-  public async getRelatedSongs(limit = 5, queue = new Set<string>()): Promise<Song[]> {
-    const videoInfo = await video_basic_info(this.url);
-    const relatedSongs: Song[] = [];
-    for (const songURL of videoInfo.related_videos) {
-      if (queue.has(songURL)) continue;  // No duplicates in queue
-      const songs = await getSongsFromQuery(songURL);
-      for (const song of songs) {
-        relatedSongs.push(song);
-        // Early return if we hit limit of songs
-        if (--limit === 0) return relatedSongs;
-      }
-    }
-    return relatedSongs;
+  public get id() {
+    return this.info.id || this.url;
   }
 
   public constructor(info: YouTubeVideo) {
