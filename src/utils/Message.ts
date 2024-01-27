@@ -18,6 +18,33 @@ export function createEmbed(type: MessageType, message: string): EmbedBuilder {
   }
 }
 
+export async function createStringListPagination(
+  interaction: ChatInputCommandInteraction<CacheType>,
+  stringList: string[],
+  title = "No title",
+  emptyText = "Empty",
+  stringsPerPage = 5,
+  initialPage = 0,
+  timeout = 120000
+) {
+  const pages: EmbedBuilder[] = [];
+
+  if (stringList.length > 0) {
+    for (let i = 0; i < stringList.length; i += stringsPerPage) {
+      pages.push(new EmbedBuilder()
+      .setTitle(title)
+      .setDescription(stringList.slice(i, i + Math.min(stringList.length - i, stringsPerPage)).join("\n")));
+    }
+  } else {
+    pages.push(new EmbedBuilder()
+    .setTitle(title)
+    .setDescription(emptyText));
+  }
+
+  await createPagination(interaction, pages, initialPage, timeout);
+}
+
+
 export async function createPagination(
   interaction: ChatInputCommandInteraction<CacheType>,
   pages: EmbedBuilder[],

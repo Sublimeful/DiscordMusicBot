@@ -1,7 +1,7 @@
-import { SlashCommandBuilder, EmbedBuilder } from "discord.js";
+import { SlashCommandBuilder } from "discord.js";
 import CommandContext from "../../structures/CommandContext.ts";
 import { inVC, sameVC, validVC } from "../../utils/VoiceChannel.ts";
-import { createPagination } from "../../utils/Message.ts";
+import { createStringListPagination } from "../../utils/Message.ts";
 
 export default {
   data: new SlashCommandBuilder()
@@ -12,30 +12,12 @@ export default {
 
     const music = context.guild!.music!;
     const songs = music.songs;
-    const pages: EmbedBuilder[] = []
     const songsPerPage = 5;
 
-    if (songs.length > 0) {
-      for (let i = 0; i < songs.length; i += songsPerPage) {
-        let songsList = "";
-        for (let j = 0; j < Math.min(songs.length - i, songsPerPage); j++) {
-          let currIndex = i + j;
-          let currSong = songs[currIndex];
-          songsList += `${currIndex === music.currentIndex ? "-> " : ""}${currIndex + 1}: ${currSong.title} \n`;
-        }
-        const page = new EmbedBuilder()
-          .setTitle("Queue")
-          .setDescription(songsList);
-        pages.push(page);
-      }
-    } else {
-      const page = new EmbedBuilder()
-        .setTitle("Queue")
-        .setDescription(`There are no songs, add some now!`);
-      pages.push(page);
-    }
+    const stringList = songs.map((song, index) => `${index === music.currentIndex ? "-> " : ""}${index + 1}: ${song.title}`);
 
     const initialPage = music.currentIndex === -1 ? 0 : Math.floor(music.currentIndex / songsPerPage);
-    await createPagination(context.interaction, pages, initialPage);
+
+    await createStringListPagination(context.interaction, stringList, "Queue", "There are no songs, add some now!", 5, initialPage);
   }
 };
