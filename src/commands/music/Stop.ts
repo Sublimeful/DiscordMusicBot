@@ -7,7 +7,7 @@ export default {
   data: new SlashCommandBuilder()
     .setName("stop")
     .setDescription("Stops current playback"),
-  async execute(context: CommandContext) {
+  execute(context: CommandContext) {
     if (!inVC(context) || !sameVC(context) || !validVC(context)) return;
     context.guild!.music!.stop();
     const embed = createEmbed(MessageType.info, `Player has been stopped!`);

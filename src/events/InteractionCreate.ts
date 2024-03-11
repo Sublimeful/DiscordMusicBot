@@ -2,15 +2,16 @@ import { Client, TextChannel } from "discord.js";
 import { CommandsMap } from "../Commands.ts";
 import CommandContext from "../structures/CommandContext.ts";
 import ServerMusic from "../structures/ServerMusic.ts";
+import Debug from "../structures/Debug.ts";
 
 export default (client: Client): void => {
-  client.on("interactionCreate", async (interaction) => {
+  client.on("interactionCreate", (interaction) => {
     if (!interaction.isChatInputCommand()) return;
 
     const command = CommandsMap.get(interaction.commandName);
 
     if (!command) {
-      return console.error(
+      return Debug.error(
         `No command matching ${interaction.commandName} was found.`,
       );
     }
@@ -32,10 +33,9 @@ export default (client: Client): void => {
         );
       }
 
-      await command.execute(context);
+      command.execute(context);
     } catch (error) {
-      console.error(`Error executing ${interaction.commandName}`);
-      console.error(error);
+      Debug.error(`Error while executing ${interaction.commandName}: ${error}`);
     }
   });
 };

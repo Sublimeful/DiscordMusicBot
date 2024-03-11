@@ -22,7 +22,7 @@ export function createEmbed(type: MessageType, message: string): EmbedBuilder {
   }
 }
 
-export async function createStringListPagination(
+export function createStringListPagination(
   interaction: ChatInputCommandInteraction<CacheType>,
   stringList: string[],
   title = "No title",
@@ -49,7 +49,7 @@ export async function createStringListPagination(
     pages.push(new EmbedBuilder().setTitle(title).setDescription(emptyText));
   }
 
-  await createPagination(interaction, pages, initialPage, timeout);
+  createPagination(interaction, pages, initialPage, timeout);
 }
 
 export async function createPagination(

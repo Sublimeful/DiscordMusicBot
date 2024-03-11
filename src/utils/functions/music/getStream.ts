@@ -1,7 +1,7 @@
 import { Readable } from "stream";
 import { exec } from "../../../yt-dlp-utils/index.js";
 
-export async function getStream(url: string): Promise<Readable> {
+export function getStream(url: string): Promise<Readable> {
   return new Promise((resolve, reject) => {
     const stream = exec(
       url,

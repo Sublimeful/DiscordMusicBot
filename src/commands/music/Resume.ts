@@ -7,7 +7,7 @@ export default {
   data: new SlashCommandBuilder()
     .setName("resume")
     .setDescription("Resumes current playback"),
-  async execute(context: CommandContext) {
+  execute(context: CommandContext) {
     if (!inVC(context) || !sameVC(context) || !validVC(context)) return;
     context.guild!.music!.resume();
     const embed = createEmbed(MessageType.info, `Player has been resumed!`);

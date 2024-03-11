@@ -7,7 +7,7 @@ export default {
   data: new SlashCommandBuilder()
     .setName("clear")
     .setDescription("Clears the queue"),
-  async execute(context: CommandContext) {
+  execute(context: CommandContext) {
     if (!inVC(context) || !sameVC(context) || !validVC(context)) return;
     context.guild!.music!.clear();
     const embed = createEmbed(MessageType.info, "Queue has been cleared");

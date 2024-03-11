@@ -90,11 +90,8 @@ export const joinVC = function (
     selfDeaf: true,
   });
 
-  //<{{ Fix for youtube livestreams cutting out in the middle of playback
-  const networkStateChangeHandler = (
-    oldNetworkState: any,
-    newNetworkState: any,
-  ) => {
+  // <{{ Fix for youtube livestreams cutting out in the middle of playback
+  const networkStateChangeHandler = (_: any, newNetworkState: any) => {
     const newUdp = Reflect.get(newNetworkState, "udp");
     clearInterval(newUdp?.keepAliveInterval);
   };
@@ -106,7 +103,7 @@ export const joinVC = function (
     oldNetworking?.off("stateChange", networkStateChangeHandler);
     newNetworking?.on("stateChange", networkStateChangeHandler);
   });
-  //}}>
+  // }}>
 
   return voiceConnection;
 };

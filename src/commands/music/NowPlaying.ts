@@ -7,7 +7,7 @@ export default {
   data: new SlashCommandBuilder()
     .setName("nowplaying")
     .setDescription("Displays the now playing song"),
-  async execute(context: CommandContext) {
+  execute(context: CommandContext) {
     if (!inVC(context) || !sameVC(context) || !validVC(context)) return;
 
     const music = context.guild!.music!;

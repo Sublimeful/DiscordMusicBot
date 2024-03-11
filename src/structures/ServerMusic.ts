@@ -97,8 +97,13 @@ export default class ServerMusic {
   public skipSong() {
     const skippedSong = this.currentSong;
     const newSong = this.nextSong();
-    if (newSong) this.play(newSong);
-    else this.stop();
+
+    if (newSong) {
+      this.play(newSong);
+    } else {
+      this.stop();
+    }
+
     return skippedSong;
   }
 
@@ -107,15 +112,14 @@ export default class ServerMusic {
    * @returns null
    */
   public stop() {
-    this.player.pause();
-    this.player.stop();
+    this.player.stop(true);
   }
 
   /**
    * Immediately plays a song
    * @returns null
    */
-  public async play(song: Song) {
+  public play(song: Song) {
     // This shouldn't happen! Play should always be called when bot is connected to a VC
     if (!this.connection) {
       return Debug.error(
@@ -123,15 +127,18 @@ export default class ServerMusic {
       );
     }
 
-    const stream = await song.getStream();
-    const resource = createAudioResource(stream, {
-      inlineVolume: true,
-      inputType: StreamType.OggOpus,
-      metadata: song,
-    });
+    song.getStream().then((stream) => {
+      const resource = createAudioResource(stream, {
+        inlineVolume: true,
+        inputType: StreamType.OggOpus,
+        metadata: song,
+      });
 
-    this.player.play(resource);
-    this.connection.subscribe(this.player);
+      if (this.connection) {
+        this.connection.subscribe(this.player);
+        this.player.play(resource);
+      }
+    });
   }
 
   public pause() {
@@ -156,9 +163,9 @@ export default class ServerMusic {
   }
 
   public destroy() {
-    this.stop();
     this.connection?.disconnect();
-    delete this.textChannel.guild.music;
+    this.connection = null;
+    this.clear();
   }
 
   public constructor(public readonly textChannel: TextChannel) {
@@ -196,15 +203,19 @@ export default class ServerMusic {
           });
         }
       } else if (newState.status === "idle") {
-        this.skipSong();
-        if (this.currentIndex === -1) {
+        if (this.currentIndex !== -1) {
+          // If the state of the music player is EOF, then
+          // autoskip should not move on to the first song
+          this.skipSong();
+        } else if (this.queue.length > 0) {
+          // This message should not print when the user executes the Clear command
           const embed = createEmbed(MessageType.info, `Now at tail of queue`);
           this.textChannel.send({ embeds: [embed] });
         }
       }
     });
     this.player.on("error", (error) => {
-      console.error(error);
+      Debug.error(error);
     });
   }
 }

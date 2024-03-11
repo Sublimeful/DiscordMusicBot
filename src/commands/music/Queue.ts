@@ -7,7 +7,7 @@ export default {
   data: new SlashCommandBuilder()
     .setName("queue")
     .setDescription("Displays the current queue"),
-  async execute(context: CommandContext) {
+  execute(context: CommandContext) {
     if (!inVC(context) || !sameVC(context) || !validVC(context)) return;
 
     const music = context.guild!.music!;
@@ -24,7 +24,7 @@ export default {
         ? 0
         : Math.floor(music.currentIndex / songsPerPage);
 
-    await createStringListPagination(
+    createStringListPagination(
       context.interaction,
       stringList,
       "Queue",

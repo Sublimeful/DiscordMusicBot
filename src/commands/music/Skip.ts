@@ -7,7 +7,7 @@ export default {
   data: new SlashCommandBuilder()
     .setName("skip")
     .setDescription("Skips the current song!"),
-  async execute(context: CommandContext) {
+  execute(context: CommandContext) {
     if (!inVC(context) || !sameVC(context) || !validVC(context)) return;
 
     const music = context.guild!.music!;
@@ -17,16 +17,6 @@ export default {
     if (skippedSong) {
       embeds.push(
         createEmbed(MessageType.info, `Skipped: ${skippedSong.title}`),
-      );
-      if (music.currentIndex === -1) {
-        embeds.push(createEmbed(MessageType.info, `Now at tail of queue`));
-      }
-    } else {
-      embeds.push(
-        createEmbed(
-          MessageType.info,
-          `Restarting playback from the beginning of the queue!`,
-        ),
       );
     }
 

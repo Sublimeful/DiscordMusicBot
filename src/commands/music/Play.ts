@@ -13,7 +13,7 @@ export default {
         .setDescription("A search query")
         .setRequired(true),
     ),
-  async execute(context: CommandContext) {
+  execute(context: CommandContext) {
     if (!inVC(context) || !sameVC(context) || !validVC(context)) return;
 
     const interaction = context.interaction;

@@ -1,5 +1,4 @@
 import {
-  EmbedBuilder,
   SlashCommandBuilder,
   SlashCommandIntegerOption,
   SlashCommandSubcommandBuilder,
@@ -9,7 +8,6 @@ import { inVC, sameVC, validVC } from "../../utils/VoiceChannel.ts";
 import {
   MessageType,
   createEmbed,
-  createPagination,
   createStringListPagination,
 } from "../../utils/Message.ts";
 
@@ -48,7 +46,7 @@ export default {
             .setRequired(true),
         ),
     ),
-  async execute(context: CommandContext) {
+  execute(context: CommandContext) {
     if (!inVC(context) || !sameVC(context) || !validVC(context)) return;
 
     const music = context.guild!.music!;
@@ -94,7 +92,7 @@ export default {
         (song, index) => `${index + 1}: [${song.title}](${song.url})`,
       );
 
-      return createStringListPagination(
+      createStringListPagination(
         context.interaction,
         stringList,
         "Removed Songs",

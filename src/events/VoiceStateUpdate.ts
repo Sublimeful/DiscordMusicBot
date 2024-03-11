@@ -1,4 +1,4 @@
-import { Client, StageChannel, VoiceChannel, VoiceState } from "discord.js";
+import { Client, VoiceState } from "discord.js";
 import { MessageType, createEmbed } from "../utils/Message.ts";
 
 export default (client: Client): void => {

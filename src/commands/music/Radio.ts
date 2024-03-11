@@ -55,7 +55,7 @@ export default {
             ),
         ),
     ),
-  async execute(context: CommandContext) {
+  execute(context: CommandContext) {
     if (!inVC(context) || !sameVC(context) || !validVC(context)) return;
 
     const interaction = context.interaction;

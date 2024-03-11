@@ -14,7 +14,7 @@ export default {
         .setRequired(true)
         .setDescription("The index to jump to"),
     ),
-  async execute(context: CommandContext) {
+  execute(context: CommandContext) {
     if (!inVC(context) || !sameVC(context) || !validVC(context)) return;
 
     const music = context.guild!.music!;
