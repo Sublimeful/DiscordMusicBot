@@ -1,4 +1,12 @@
-import { AudioPlayer, AudioPlayerStatus, NoSubscriberBehavior, StreamType, VoiceConnection, createAudioPlayer, createAudioResource } from "@discordjs/voice";
+import {
+  AudioPlayer,
+  AudioPlayerStatus,
+  NoSubscriberBehavior,
+  StreamType,
+  VoiceConnection,
+  createAudioPlayer,
+  createAudioResource,
+} from "@discordjs/voice";
 import ServerQueue from "./ServerQueue.ts";
 import { Song } from "./Song.ts";
 import Debug from "./Debug.ts";
@@ -8,19 +16,19 @@ import { getRelatedSongs } from "../utils/functions/music/getRelatedSongs.ts";
 
 interface ServerMusicOptions {
   radio: {
-    isOn: boolean,
-    relatedSongsLimit: number,
-    relatedSongsRandomness: number,
-    suggestUniqueSongs: boolean,
-  }
+    isOn: boolean;
+    relatedSongsLimit: number;
+    relatedSongsRandomness: number;
+    suggestUniqueSongs: boolean;
+  };
 }
 
 export default class ServerMusic {
   public readonly queue: ServerQueue = new ServerQueue();
   public readonly player: AudioPlayer = createAudioPlayer({
     behaviors: {
-      noSubscriber: NoSubscriberBehavior.Play
-    }
+      noSubscriber: NoSubscriberBehavior.Play,
+    },
   });
   public connection: VoiceConnection | null = null;
   public currentState: AudioPlayerStatus;
@@ -56,8 +64,8 @@ export default class ServerMusic {
    * @returns removed songs
    */
   public remove(from: number, to = from) {
-    const currentSongIsRemoved = this.currentIndex >= from &&
-                                 this.currentIndex <= to;
+    const currentSongIsRemoved =
+      this.currentIndex >= from && this.currentIndex <= to;
     const removedSongs = this.queue.remove(from, to);
     // Try to play next song if the current song is part of removed songs,
     // If there is no next song, then player will enter EOF state
@@ -89,13 +97,11 @@ export default class ServerMusic {
   public skipSong() {
     const skippedSong = this.currentSong;
     const newSong = this.nextSong();
-    if (newSong)
-      this.play(newSong);
-    else
-      this.stop();
+    if (newSong) this.play(newSong);
+    else this.stop();
     return skippedSong;
   }
-  
+
   /**
    * Stops all playback
    * @returns null
@@ -112,11 +118,17 @@ export default class ServerMusic {
   public async play(song: Song) {
     // This shouldn't happen! Play should always be called when bot is connected to a VC
     if (!this.connection) {
-      return Debug.error("'play' function called when the bot is not connected to a voice channel!");
+      return Debug.error(
+        "'play' function called when the bot is not connected to a voice channel!",
+      );
     }
 
     const stream = await song.getStream();
-    const resource = createAudioResource(stream, { inlineVolume: true, inputType: StreamType.OggOpus, metadata: song });
+    const resource = createAudioResource(stream, {
+      inlineVolume: true,
+      inputType: StreamType.OggOpus,
+      metadata: song,
+    });
 
     this.player.play(resource);
     this.connection.subscribe(this.player);
@@ -170,14 +182,18 @@ export default class ServerMusic {
               filterList.add(song.id);
             }
           }
-          getRelatedSongs(newSong, filterList, this.options.radio.relatedSongsLimit, this.options.radio.relatedSongsRandomness)
-            .then(songs => {
-              this.enqueue(songs);
+          getRelatedSongs(
+            newSong,
+            filterList,
+            this.options.radio.relatedSongsLimit,
+            this.options.radio.relatedSongsRandomness,
+          ).then((songs) => {
+            this.enqueue(songs);
 
-              const message = `Added: ${songs.length} related songs`;
-              const embed = createEmbed(MessageType.info, message);
-              this.textChannel.send({ embeds: [embed] });
-            });
+            const message = `Added: ${songs.length} related songs`;
+            const embed = createEmbed(MessageType.info, message);
+            this.textChannel.send({ embeds: [embed] });
+          });
         }
       } else if (newState.status === "idle") {
         this.skipSong();
@@ -186,10 +202,9 @@ export default class ServerMusic {
           this.textChannel.send({ embeds: [embed] });
         }
       }
-    })
-    this.player.on("error", error => {
-      console.error(error)
-    })
+    });
+    this.player.on("error", (error) => {
+      console.error(error);
+    });
   }
 }
-

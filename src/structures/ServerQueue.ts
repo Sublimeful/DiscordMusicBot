@@ -6,8 +6,7 @@ export default class ServerQueue {
   public currentIndex: number;
 
   public get currentSong(): Song | null {
-    if (this.currentIndex >= 0 &&
-        this.currentIndex < this.songs.length) {
+    if (this.currentIndex >= 0 && this.currentIndex < this.songs.length) {
       return this.songs[this.currentIndex];
     }
     return null;
@@ -24,7 +23,7 @@ export default class ServerQueue {
 
   public nextSong(): Song | null {
     if (this.currentIndex + 1 >= this.length) {
-      this.currentIndex = -1;  // EOF state: when there is nothing more to be played
+      this.currentIndex = -1; // EOF state: when there is nothing more to be played
       return null;
     }
     return this.songs[++this.currentIndex];
@@ -32,7 +31,7 @@ export default class ServerQueue {
 
   public jumpSong(n: number): Song | null {
     if (n >= this.length || n < 0) return null;
-    return this.songs[this.currentIndex = n];
+    return this.songs[(this.currentIndex = n)];
   }
 
   public get length() {
@@ -57,9 +56,7 @@ export default class ServerQueue {
   }
 
   public clear() {
-    this.songs = []
+    this.songs = [];
     this.currentIndex = -1;
   }
 }
-
-

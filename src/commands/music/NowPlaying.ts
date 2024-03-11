@@ -5,8 +5,8 @@ import { MessageType, createEmbed } from "../../utils/Message.ts";
 
 export default {
   data: new SlashCommandBuilder()
-  .setName("nowplaying")
-  .setDescription("Displays the now playing song"),
+    .setName("nowplaying")
+    .setDescription("Displays the now playing song"),
   async execute(context: CommandContext) {
     if (!inVC(context) || !sameVC(context) || !validVC(context)) return;
 
@@ -14,11 +14,14 @@ export default {
     const currentSong = music.currentSong;
 
     if (currentSong) {
-      var embed = createEmbed(MessageType.info, `Now Playing: ${currentSong.title}`);
+      var embed = createEmbed(
+        MessageType.info,
+        `Now Playing: ${currentSong.title}`,
+      );
     } else {
       var embed = createEmbed(MessageType.info, `Nothing is playing right now`);
     }
 
     context.interaction.reply({ embeds: [embed] });
-  }
+  },
 };

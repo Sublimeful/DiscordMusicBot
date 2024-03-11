@@ -5,12 +5,12 @@ import { MessageType, createEmbed } from "../../utils/Message.ts";
 
 export default {
   data: new SlashCommandBuilder()
-  .setName("resume")
-  .setDescription("Resumes current playback"),
+    .setName("resume")
+    .setDescription("Resumes current playback"),
   async execute(context: CommandContext) {
     if (!inVC(context) || !sameVC(context) || !validVC(context)) return;
     context.guild!.music!.resume();
     const embed = createEmbed(MessageType.info, `Player has been resumed!`);
     context.interaction.reply({ embeds: [embed] });
-  }
+  },
 };

@@ -5,20 +5,22 @@ import { MessageType, createEmbed } from "../../utils/Message.ts";
 
 export default {
   data: new SlashCommandBuilder()
-  .setName("jump")
-  .setDescription("Skip to certain index of the queue!")
-  .addIntegerOption(new SlashCommandIntegerOption()
-                      .setName("index")
-                      .setMinValue(1)
-                      .setRequired(true)
-                      .setDescription("The index to jump to")),
+    .setName("jump")
+    .setDescription("Skip to certain index of the queue!")
+    .addIntegerOption(
+      new SlashCommandIntegerOption()
+        .setName("index")
+        .setMinValue(1)
+        .setRequired(true)
+        .setDescription("The index to jump to"),
+    ),
   async execute(context: CommandContext) {
     if (!inVC(context) || !sameVC(context) || !validVC(context)) return;
 
     const music = context.guild!.music!;
     const interaction = context.interaction;
 
-    const index = (interaction.options.getInteger("index"))! - 1;
+    const index = interaction.options.getInteger("index")! - 1;
 
     if (index >= music.songs.length) {
       const message = `Please enter a valid range between: 1 - ${music.songs.length}`;
@@ -36,5 +38,5 @@ export default {
     }
 
     return context.interaction.reply({ embeds: [embed] });
-  }
+  },
 };

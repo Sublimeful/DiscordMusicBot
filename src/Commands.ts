@@ -10,9 +10,21 @@ import Skip from "./commands/music/Skip.ts";
 import Stop from "./commands/music/Stop.ts";
 import Radio from "./commands/music/Radio.ts";
 
-export const Commands = [Play, Skip, Queue, Jump, Pause, Resume, Stop, Clear, NowPlaying, Remove, Radio]
+export const Commands = [
+  Play,
+  Skip,
+  Queue,
+  Jump,
+  Pause,
+  Resume,
+  Stop,
+  Clear,
+  NowPlaying,
+  Remove,
+  Radio,
+];
 export const CommandsMap = new Map<string, any>();
 
-for(const cmd of Commands) {
+for (const cmd of Commands) {
   CommandsMap.set(cmd.data.name, cmd);
 }

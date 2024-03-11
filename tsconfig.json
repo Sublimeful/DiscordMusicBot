@@ -14,11 +14,9 @@
     "skipLibCheck": true,
     "noEmitHelpers": true,
     "importHelpers": true,
-    "resolveJsonModule": true
+    "resolveJsonModule": true,
   },
   "exclude": [],
-  "include": [
-    "src/**/*"
-  ],
-  "files": ["src/typings/index.d.ts"]
+  "include": ["src/**/*"],
+  "files": ["src/typings/index.d.ts"],
 }

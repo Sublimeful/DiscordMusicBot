@@ -11,8 +11,8 @@ export async function getStream(url: string): Promise<Readable> {
         format: "bestaudio",
       },
       {
-        stdio: ["ignore", "pipe", "ignore"]
-      }
+        stdio: ["ignore", "pipe", "ignore"],
+      },
     );
 
     if (!stream.stdout) {

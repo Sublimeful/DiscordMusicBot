@@ -4,26 +4,32 @@ import CommandContext from "../structures/CommandContext.ts";
 import ServerMusic from "../structures/ServerMusic.ts";
 
 export default (client: Client): void => {
-  client.on("interactionCreate", async interaction => {
+  client.on("interactionCreate", async (interaction) => {
     if (!interaction.isChatInputCommand()) return;
 
     const command = CommandsMap.get(interaction.commandName);
 
     if (!command) {
-      return console.error(`No command matching ${interaction.commandName} was found.`);
+      return console.error(
+        `No command matching ${interaction.commandName} was found.`,
+      );
     }
 
     try {
       const context = new CommandContext(interaction);
 
       if (!context.guild || !context.interaction.channel) {
-        interaction.reply("Commands must be sent in a server's valid text channel!");
+        interaction.reply(
+          "Commands must be sent in a server's valid text channel!",
+        );
         return;
       }
 
       // Create music instance for guild here before any music commands are executed
       if (!context.guild.music) {
-        context.guild.music = new ServerMusic(context.interaction.channel as TextChannel);
+        context.guild.music = new ServerMusic(
+          context.interaction.channel as TextChannel,
+        );
       }
 
       await command.execute(context);

@@ -3,7 +3,10 @@ import { getSongsFromQuery } from "./getSongsFromQuery.ts";
 import { MessageType, createEmbed } from "../../Message.ts";
 import { joinVC } from "../../VoiceChannel.ts";
 
-export default async function handleQuery(context: CommandContext, query: string) {
+export default async function handleQuery(
+  context: CommandContext,
+  query: string,
+) {
   // These 3 things must be truthy
   const voiceChannel = context.voiceChannel!;
   const guild = context.guild!;
@@ -24,13 +27,13 @@ export default async function handleQuery(context: CommandContext, query: string
     return context.interaction.reply({ embeds: [embed] });
   }
 
-  if (music.currentIndex !== -1) return;  // Only play song when queue is at it's EOF state
+  if (music.currentIndex !== -1) return; // Only play song when queue is at it's EOF state
 
   try {
     // try joining the Voice Channel the user who ran the command is in
     music.connection = joinVC(guild, voiceChannel);
-    music.jumpSong(music.songs.length - songs.length);  // Jump to the first song of the added songs
-  } catch(error) {
+    music.jumpSong(music.songs.length - songs.length); // Jump to the first song of the added songs
+  } catch (error) {
     music.destroy();
   }
 }

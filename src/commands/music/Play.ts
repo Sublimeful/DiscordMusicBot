@@ -5,18 +5,20 @@ import { inVC, sameVC, validVC } from "../../utils/VoiceChannel.ts";
 
 export default {
   data: new SlashCommandBuilder()
-  .setName("play")
-  .setDescription("Plays something from the internet!")
-  .addStringOption(new SlashCommandStringOption()
-                  .setName("query")
-                  .setDescription("A search query")
-                  .setRequired(true)),
+    .setName("play")
+    .setDescription("Plays something from the internet!")
+    .addStringOption(
+      new SlashCommandStringOption()
+        .setName("query")
+        .setDescription("A search query")
+        .setRequired(true),
+    ),
   async execute(context: CommandContext) {
     if (!inVC(context) || !sameVC(context) || !validVC(context)) return;
 
     const interaction = context.interaction;
-    const query = (interaction.options.getString("query"))!
+    const query = interaction.options.getString("query")!;
 
     handleQuery(context, query);
-  }
+  },
 };
