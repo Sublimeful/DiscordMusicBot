@@ -113,6 +113,7 @@ export default class ServerMusic {
    */
   public stop() {
     this.player.stop(true);
+    this.queue.endSession();
   }
 
   /**
@@ -153,13 +154,14 @@ export default class ServerMusic {
    * Sets the queue's current index to n or length of the queue, whichever is lower,
    * and plays the songs at that index
    * @param n the index to set the index to
-   * @returns skipped song, null if nothing was skipped
+   * @returns void
    **/
   public jumpSong(n: number) {
-    const skippedSong = this.currentSong;
     const newSong = this.queue.jumpSong(n);
-    if (newSong) this.play(newSong);
-    return skippedSong;
+
+    if (newSong) {
+      this.play(newSong);
+    }
   }
 
   public destroy() {

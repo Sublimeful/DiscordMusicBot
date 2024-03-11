@@ -12,14 +12,16 @@ export default {
 
     const music = context.guild!.music!;
     const skippedSong = music.skipSong();
-    const embeds = [];
 
     if (skippedSong) {
-      embeds.push(
-        createEmbed(MessageType.info, `Skipped: ${skippedSong.title}`),
+      const embed = createEmbed(
+        MessageType.info,
+        `Skipped: ${skippedSong.title}`,
       );
+      return context.interaction.reply({ embeds: [embed] });
+    } else {
+      const embed = createEmbed(MessageType.info, `Nothing was skipped`);
+      return context.interaction.reply({ embeds: [embed] });
     }
-
-    return context.interaction.reply({ embeds });
   },
 };

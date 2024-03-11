@@ -22,8 +22,15 @@ export default class ServerQueue {
   }
 
   public nextSong(): Song | null {
+    if (this.currentIndex === -1) {
+      // If the state of the music player is EOF, then
+      // the next song should not be the first song
+      return null;
+    }
+
+    // The last song has been played
     if (this.currentIndex + 1 >= this.length) {
-      this.currentIndex = -1; // EOF state: when there is nothing more to be played
+      this.endSession();
       return null;
     }
     return this.songs[++this.currentIndex];
@@ -39,14 +46,6 @@ export default class ServerQueue {
   }
 
   public remove(from: number, to = from): Song[] {
-    if (to < from) {
-      Debug.error(`'remove' command: to < from`);
-      return [];
-    }
-    if (to < 0 || to >= this.length || from < 0 || from >= this.length) {
-      Debug.error(`'remove' command: either from or to index out of range`);
-      return [];
-    }
     if (this.currentIndex >= from && this.currentIndex <= to) {
       this.currentIndex = from - 1;
     } else if (to < this.currentIndex) {
@@ -55,8 +54,19 @@ export default class ServerQueue {
     return this.songs.splice(from, to - from + 1);
   }
 
+  /**
+   * Clears the queue, does not automatically enter EOF state
+   * @returns void
+   */
   public clear() {
     this.songs = [];
-    this.currentIndex = -1;
+  }
+
+  /**
+   * Ends the current music session
+   * @returns void
+   */
+  public endSession() {
+    this.currentIndex = -1; // EOF state: when there is nothing more to be played
   }
 }

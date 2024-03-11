@@ -22,21 +22,22 @@ export default {
 
     const index = interaction.options.getInteger("index")! - 1;
 
-    if (index >= music.songs.length) {
+    if (music.songs.length === 0) {
+      const message = `There are no songs in the queue!`;
+      const embed = createEmbed(MessageType.error, message);
+      return context.interaction.reply({ embeds: [embed] });
+    } else if (index >= music.songs.length) {
       const message = `Please enter a valid range between: 1 - ${music.songs.length}`;
       const embed = createEmbed(MessageType.error, message);
       return context.interaction.reply({ embeds: [embed] });
     }
 
-    const skippedSong = music.jumpSong(index);
-    if (skippedSong) {
-      const message = `Skipped: ${skippedSong.title}`;
-      var embed = createEmbed(MessageType.info, message);
-    } else {
-      const message = `Nothing was skipped`;
-      var embed = createEmbed(MessageType.info, message);
-    }
+    music.jumpSong(index);
 
-    return context.interaction.reply({ embeds: [embed] });
+    if (music.currentSong) {
+      const message = `Jumped to song: ${music.currentSong.title}`;
+      const embed = createEmbed(MessageType.info, message);
+      return context.interaction.reply({ embeds: [embed] });
+    }
   },
 };

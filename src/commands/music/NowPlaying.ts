@@ -22,6 +22,6 @@ export default {
       var embed = createEmbed(MessageType.info, `Nothing is playing right now`);
     }
 
-    context.interaction.reply({ embeds: [embed] });
+    return context.interaction.reply({ embeds: [embed] });
   },
 };

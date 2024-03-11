@@ -79,13 +79,6 @@ export default {
         );
         return context.interaction.reply({ embeds: [embed] });
       }
-      if (from >= music.songs.length || to >= music.songs.length) {
-        const embed = createEmbed(
-          MessageType.error,
-          `Please enter valid indexes from 1-${music.songs.length}`,
-        );
-        return context.interaction.reply({ embeds: [embed] });
-      }
 
       const removedSongs = music.remove(from, to);
       const stringList = removedSongs.map(

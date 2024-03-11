@@ -11,6 +11,6 @@ export default {
     if (!inVC(context) || !sameVC(context) || !validVC(context)) return;
     context.guild!.music!.stop();
     const embed = createEmbed(MessageType.info, `Player has been stopped!`);
-    context.interaction.reply({ embeds: [embed] });
+    return context.interaction.reply({ embeds: [embed] });
   },
 };
