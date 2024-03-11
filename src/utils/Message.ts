@@ -58,7 +58,7 @@ export async function createPagination(
   initialPage = 0,
   timeout = 120000,
 ) {
-  if (!interaction.deferred) await interaction.deferReply();
+  if (!interaction.deferred) await interaction.deferReply().catch(() => {});
 
   let page = initialPage;
 
@@ -77,12 +77,18 @@ export async function createPagination(
     navigationButtons,
   );
 
-  const currPage = await interaction.editReply({
-    embeds: [
-      pages[page].setFooter({ text: `Page ${page + 1} / ${pages.length}` }),
-    ],
-    components: [row],
-  });
+  const currPage = await interaction
+    .editReply({
+      embeds: [
+        pages[page].setFooter({ text: `Page ${page + 1} / ${pages.length}` }),
+      ],
+      components: [row],
+    })
+    .catch(() => {});
+
+  // In some rare cases, the message `currPage` does not exist (ex: deleted)
+  // In that case, currPage would return null here
+  if (!currPage) return;
 
   const collector = currPage.createMessageComponentCollector({
     componentType: ComponentType.Button,
@@ -91,11 +97,16 @@ export async function createPagination(
 
   collector.on("collect", async (i) => {
     if (pages.length === 1) {
-      await i.deferUpdate(); // If there's only one page, then pressing
-      return; // Previous or Next shouldn't do anything
+      // If there's only one page, then pressing
+      // Previous or Next shouldn't do anything
+      await i.deferUpdate().catch(() => {});
+      return;
     }
     if (i.user.id !== interaction.user.id) {
-      i.reply({ content: `These buttons aren't for you!`, ephemeral: true });
+      i.reply({
+        content: `These buttons aren't for you!`,
+        ephemeral: true,
+      }).catch(() => {});
       return;
     }
 
@@ -110,29 +121,37 @@ export async function createPagination(
       }
     }
 
-    await i.deferUpdate();
-    await i.editReply({
-      embeds: [
-        pages[page].setFooter({ text: `Page ${page + 1} / ${pages.length}` }),
-      ],
-      components: [row],
-    });
+    await i.deferUpdate().catch(() => {});
+    await i
+      .editReply({
+        embeds: [
+          pages[page].setFooter({ text: `Page ${page + 1} / ${pages.length}` }),
+        ],
+        components: [row],
+      })
+      .catch(() => {});
 
     collector.resetTimer();
   });
 
   collector.on("end", (_, reason) => {
-    if (reason !== "messageDelete") {
+    // If the message component collector times out
+    // Then disable the Previous and Next buttons
+    if (reason === "time") {
       const disabledRow = new ActionRowBuilder<ButtonBuilder>().addComponents(
         navigationButtons[0].setDisabled(true),
         navigationButtons[1].setDisabled(true),
       );
-      currPage.edit({
-        embeds: [
-          pages[page].setFooter({ text: `Page ${page + 1} / ${pages.length}` }),
-        ],
-        components: [disabledRow],
-      });
+      currPage
+        .edit({
+          embeds: [
+            pages[page].setFooter({
+              text: `Page ${page + 1} / ${pages.length}`,
+            }),
+          ],
+          components: [disabledRow],
+        })
+        .catch(() => {});
     }
   });
 
