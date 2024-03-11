@@ -44,7 +44,6 @@ export async function createStringListPagination(
   await createPagination(interaction, pages, initialPage, timeout);
 }
 
-
 export async function createPagination(
   interaction: ChatInputCommandInteraction<CacheType>,
   pages: EmbedBuilder[],

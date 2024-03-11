@@ -1,7 +1,7 @@
 import { EmbedBuilder, SlashCommandBuilder, SlashCommandIntegerOption, SlashCommandSubcommandBuilder } from "discord.js";
 import CommandContext from "../../structures/CommandContext.ts";
 import { inVC, sameVC, validVC } from "../../utils/VoiceChannel.ts";
-import { MessageType, createEmbed, createPagination } from "../../utils/Message.ts";
+import { MessageType, createEmbed, createPagination, createStringListPagination } from "../../utils/Message.ts";
 
 export default {
   data: new SlashCommandBuilder()
@@ -59,24 +59,9 @@ export default {
       }
       
       const removedSongs = music.remove(from, to);
+      const stringList = removedSongs.map((song, index) => `${index + 1}: [${song.title}](${song.url})`);
 
-      const pages: EmbedBuilder[] = []
-      const songsPerPage = 5;
-
-      for (let i = 0; i < removedSongs.length; i += songsPerPage) {
-        let songsList = "";
-        for (let j = 0; j < Math.min(removedSongs.length - i, songsPerPage); j++) {
-          let currIndex = i + j;
-          let currSong = removedSongs[currIndex];
-          songsList += `${currIndex + 1}: ${currSong.title} \n`;
-        }
-        const page = new EmbedBuilder()
-          .setTitle("Removed Songs")
-          .setDescription(songsList);
-        pages.push(page);
-      }
-
-      return createPagination(context.interaction, pages);
+      return createStringListPagination(context.interaction, stringList, "Removed Songs");
     }
   }
 };

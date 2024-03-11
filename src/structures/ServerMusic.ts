@@ -10,6 +10,7 @@ interface ServerMusicOptions {
   radio: {
     isOn: boolean,
     relatedSongsLimit: number,
+    relatedSongsRandomness: number,
     suggestUniqueSongs: boolean,
   }
 }
@@ -28,6 +29,7 @@ export default class ServerMusic {
     radio: {
       isOn: false,
       relatedSongsLimit: 1,
+      relatedSongsRandomness: 1,
       suggestUniqueSongs: true,
     },
   };
@@ -168,12 +170,11 @@ export default class ServerMusic {
               filterList.add(song.id);
             }
           }
-          getRelatedSongs(newSong, filterList, this.options.radio.relatedSongsLimit)
+          getRelatedSongs(newSong, filterList, this.options.radio.relatedSongsLimit, this.options.radio.relatedSongsRandomness)
             .then(songs => {
-              const songsToBeAdded = songs.slice(0, this.options.radio.relatedSongsLimit);
-              this.enqueue(songsToBeAdded);
+              this.enqueue(songs);
 
-              const message = `Added: ${songsToBeAdded.length} related songs`;
+              const message = `Added: ${songs.length} related songs`;
               const embed = createEmbed(MessageType.info, message);
               this.textChannel.send({ embeds: [embed] });
             });

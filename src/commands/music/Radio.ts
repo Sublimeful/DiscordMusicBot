@@ -23,6 +23,10 @@ export default {
       .setName("limit")
       .setMinValue(1)
       .setDescription("Limits the max number of related songs that can be added at once"))
+    .addIntegerOption(new SlashCommandIntegerOption()
+      .setName("randomness")
+      .setMinValue(1)
+      .setDescription("How random the related songs will be"))
     .addBooleanOption(new SlashCommandBooleanOption()
       .setName("unique")
       .setDescription("Whether related songs that are already in queue should be added"))),
@@ -40,6 +44,7 @@ export default {
 
         fragmentedMessages.push(`Radio is ${music.options.radio.isOn ? "on" : "off"}`);
         fragmentedMessages.push(`Related songs limit: ${music.options.radio.relatedSongsLimit}`);
+        fragmentedMessages.push(`Related songs randomness: ${music.options.radio.relatedSongsRandomness}`);
         fragmentedMessages.push(`Suggest unique songs: ${music.options.radio.suggestUniqueSongs}`);
 
         embed = createEmbed(MessageType.info, fragmentedMessages.join("\n"));
@@ -57,15 +62,21 @@ export default {
       }
       case "options": {
         const limit = interaction.options.getInteger("limit");
+        const randomness = interaction.options.getInteger("randomness");
         const unique = interaction.options.getBoolean("unique");
 
-        if (limit === null && unique == null) break;
+        if (limit === null && randomness == null && unique == null) break;
 
         let fragmentedMessages: string[] = [];
 
         if (limit !== null) {
           fragmentedMessages.push(`Related songs limit: ${music.options.radio.relatedSongsLimit} -> ${limit}`);
           music.options.radio.relatedSongsLimit = limit;
+        }
+
+        if (randomness !== null) {
+          fragmentedMessages.push(`Related songs randomness: ${music.options.radio.relatedSongsRandomness} -> ${randomness}`);
+          music.options.radio.relatedSongsRandomness = randomness;
         }
 
         if (unique !== null) {

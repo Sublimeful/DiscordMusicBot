@@ -1,7 +1,7 @@
 import { Song, YTSong } from "../../../structures/Song.ts";
 import { video_basic_info } from "play-dl";
 
-async function getRelatedSongsYT(song: YTSong, videoIdFilterList: Set<String> = new Set(), limit: number = 1): Promise<Song[]> {
+async function getRelatedSongsYT(song: YTSong, videoIdFilterList: Set<String> = new Set(), limit: number = 1, randomness: number = 1): Promise<Song[]> {
   try {
     const nextResponse = (await (await fetch("https://music.youtube.com/youtubei/v1/next?prettyPrint=false", {
       "headers": {
@@ -23,7 +23,8 @@ async function getRelatedSongsYT(song: YTSong, videoIdFilterList: Set<String> = 
     videoIds = videoIds.filter(id => !(videoIdFilterList.has(id)));  // Filtering out videos present in the filter list
 
     // Shuffling the videoIds array
-    for (let i = videoIds.length - 1; i > 0; i--) {
+    // Randomness determines the upper bounds of our shuffling
+    for (let i = Math.min(randomness, videoIds.length) - 1; i > 0; i--) {
       const j = Math.floor(Math.random() * (i + 1));
       [videoIds[i], videoIds[j]] = [videoIds[j], videoIds[i]];
     }
@@ -38,9 +39,9 @@ async function getRelatedSongsYT(song: YTSong, videoIdFilterList: Set<String> = 
   }
 }
 
-export async function getRelatedSongs(song: Song, videoIdFilterList: Set<string> = new Set(), limit: number = 1): Promise<Song[]> {
+export async function getRelatedSongs(song: Song, videoIdFilterList: Set<string> = new Set(), limit: number = 1, randomness: number = 1): Promise<Song[]> {
   if (song instanceof YTSong) {
-    return await getRelatedSongsYT(song, videoIdFilterList, limit);
+    return await getRelatedSongsYT(song, videoIdFilterList, limit, randomness);
   }
 
   return [];
