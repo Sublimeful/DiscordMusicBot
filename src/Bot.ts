@@ -7,6 +7,10 @@ import InteractionCreate from "./events/InteractionCreate.ts";
 import Ready from "./events/Ready.ts";
 import VoiceStateUpdate from "./events/VoiceStateUpdate.ts";
 
+// Authorize play-dl if necessary
+// import { authorization } from "play-dl";
+// authorization();
+
 // Download yt-dlp executable first
 downloadExecutable();
 
