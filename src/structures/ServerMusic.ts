@@ -129,7 +129,7 @@ export default class ServerMusic {
     }
 
     song.getStream().then((stream) => {
-      const resource = createAudioResource(stream, {
+      const resource = createAudioResource(stream.stream, {
         inlineVolume: true,
         inputType: StreamType.OggOpus,
         metadata: song,

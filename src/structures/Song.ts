@@ -1,6 +1,5 @@
 import { YouTubeVideo } from "play-dl";
-import { getStream } from "../utils/functions/music/getStream.ts";
-import prism from "prism-media";
+import { stream } from "play-dl";
 
 export abstract class Song {
   public constructor(protected info: YouTubeVideo) {}
@@ -14,22 +13,7 @@ export abstract class Song {
   public abstract toString(): string;
 
   public async getStream() {
-    const stream = new prism.FFmpeg({
-      args: [
-        "-loglevel",
-        "0",
-        "-ar",
-        "48000",
-        "-ac",
-        "2",
-        "-f",
-        "opus",
-        "-acodec",
-        "libopus",
-      ],
-    });
-    (await getStream(this.url)).pipe(stream);
-    return stream;
+    return stream(this.url);
   }
 }
 

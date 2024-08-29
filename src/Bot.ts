@@ -1,18 +1,19 @@
 import { Client, GatewayIntentBits, REST, Routes } from "discord.js";
 import { Commands } from "./Commands.ts";
-import { downloadExecutable } from "./yt-dlp-utils/index.js";
 
 import "dotenv/config";
 import InteractionCreate from "./events/InteractionCreate.ts";
 import Ready from "./events/Ready.ts";
 import VoiceStateUpdate from "./events/VoiceStateUpdate.ts";
 
-// Authorize play-dl if necessary
-// import { authorization } from "play-dl";
-// authorization();
-
-// Download yt-dlp executable first
-downloadExecutable();
+// Authorize play-dl
+import { setToken } from "play-dl";
+const ytCookies = process.env.YTCOOKIES ?? "";
+setToken({
+  youtube: {
+    cookie: ytCookies
+  }
+});
 
 const token = process.env.TOKEN ?? "";
 const clientId = process.env.CLIENTID ?? "";
